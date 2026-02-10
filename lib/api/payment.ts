@@ -17,7 +17,7 @@ export class PaymentService {
    * Get basket payment information
    */
   static async getBasket(request: PaymentBasketRequest): Promise<ApiResponse<PaymentResponse>> {
-    return apiClient.post<PaymentResponse>('/api/payment/basket', request);
+    return apiClient.post<PaymentResponse>('/api/payment/basket/proxy', request);
   }
 
   /**
@@ -31,28 +31,28 @@ export class PaymentService {
    * Check payment status
    */
   static async check(request: PaymentCheckRequest): Promise<ApiResponse<PaymentResponse>> {
-    return apiClient.post<PaymentResponse>('/api/payment/check', request);
+    return apiClient.post<PaymentResponse>('/api/payment/check/proxy', request);
   }
 
   /**
    * Complete payment
    */
   static async complete(request: PaymentCompleteRequest): Promise<ApiResponse<PaymentResponse>> {
-    return apiClient.post<PaymentResponse>('/api/payment/complete', request);
+    return apiClient.post<PaymentResponse>('/api/payment/complete/proxy', request);
   }
 
   /**
    * Generate barcode for payment
    */
   static async generateBarcode(request: PaymentMethodRequest): Promise<ApiResponse<PaymentResponse>> {
-    return apiClient.post<PaymentResponse>('/api/payment/method/barcode', request);
+    return apiClient.post<PaymentResponse>('/api/payment/method/barcode/proxy', request);
   }
 
   /**
    * Generate POS payment
    */
   static async generatePOS(request: PaymentMethodRequest): Promise<ApiResponse<PaymentResponse>> {
-    return apiClient.post<PaymentResponse>('/api/payment/method/pos', request);
+    return apiClient.post<PaymentResponse>('/api/payment/method/pos/proxy', request);
   }
 }
 

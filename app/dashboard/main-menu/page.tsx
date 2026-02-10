@@ -183,7 +183,7 @@ export default function MainMenu() {
               <p className="text-xl">در حال بارگذاری...</p>
             </div>
           ) : activeTab === 'all' && (
-            <div className="flex justify-between flex-wrap ">
+            <div className="grid grid-cols-3 justify-between flex-wrap ">
                
 
 
@@ -197,14 +197,14 @@ export default function MainMenu() {
   
   // محاسبه border-left بر اساس موقعیت در ردیف
   const isFirstInRow = index % 3 === 0;
-  const borderLeftClass = isFirstInRow ? 'border-l-0' : 'border-l-2';
+  const borderLeftClass = isFirstInRow ? 'border-l-0' : 'border-r-2';
   
   return (
     <div 
       key={`service-${service.id}-${index}`} 
-      className={`w-[33.3%] p-3 border-b-2 border-[#dccba1] flex flex-col items-center justify-center ${
+      className={`p-3 border-b-2  border-[#dccba1] flex flex-col items-center justify-center ${
         isDisabled ? 'opacity-60 cursor-not-allowed' : ''
-      } ${borderLeftClass}`}
+      } ${borderLeftClass} ${index == services.length - 1 && 'border-l-2'}`}
     >
       <Image
         src={service.iconUrlAddress || '/images/serv-1.png'}

@@ -81,23 +81,30 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
 
       if (qrResponse.success) {
         // Check if QR code is in the response
+        let qrCodeData = null;
+        
         if (qrResponse.data?.qrCode) {
-          setQrCode(qrResponse.data.qrCode);
-          setPaymentID(basketResponse.data.paymentID);
-          setCountdown(29);
+          qrCodeData = qrResponse.data.qrCode;
         } else if (qrResponse.data?.barcode) {
           // Some APIs might return barcode instead of qrCode
-          setQrCode(qrResponse.data.barcode);
-          setPaymentID(basketResponse.data.paymentID);
-          setCountdown(29);
+          qrCodeData = qrResponse.data.barcode;
         } else if (qrResponse.data?.barcodeData?.qrCode) {
           // QR code is in barcodeData object (based on API response)
-          setQrCode(qrResponse.data.barcodeData.qrCode);
-          setPaymentID(basketResponse.data.paymentID);
-          setCountdown(29);
+          qrCodeData = qrResponse.data.barcodeData.qrCode;
         } else if (qrResponse.data?.barcodeData?.barcodeText) {
           // Use barcodeText if qrCode is not available
-          setQrCode(qrResponse.data.barcodeData.barcodeText);
+          qrCodeData = qrResponse.data.barcodeData.barcodeText;
+        }
+        
+        if (qrCodeData) {
+          // Check if the QR code is a base64 string or a URL
+          if (qrCodeData.startsWith('data:image/') || qrCodeData.startsWith('http')) {
+            setQrCode(qrCodeData);
+          } else {
+            // If it's just text data, we need to generate a QR code from it
+            // For now, use a placeholder image
+            setQrCode('/images/qr-code-big.png');
+          }
           setPaymentID(basketResponse.data.paymentID);
           setCountdown(29);
         } else {
