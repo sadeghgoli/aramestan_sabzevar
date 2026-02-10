@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { ImageButton } from '../components';
 import { useApp } from '../../lib/contexts/AppContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function VerifyCode() {
+function VerifyCodeContent() {
   const { login, deviceID } = useApp();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -262,5 +262,13 @@ export default function VerifyCode() {
           </div>
         </div>
     </div>
+  );
+}
+
+export default function VerifyCode() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#093785]"></div></div>}>
+      <VerifyCodeContent />
+    </Suspense>
   );
 }
