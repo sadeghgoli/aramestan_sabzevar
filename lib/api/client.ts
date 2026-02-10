@@ -12,7 +12,7 @@ class ApiClient {
 
     this.client = axios.create({
       baseURL: this.baseURL,
-      timeout: 10000,
+      timeout: 30000, // Increased to 30 seconds to handle slower API responses
       headers: {
         'Content-Type': 'application/json',
         'app-version': '1', // Based on Postman collection

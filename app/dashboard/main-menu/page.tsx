@@ -225,9 +225,10 @@ export default function MainMenu() {
       </p>
       
       {/* Quantity Controls */}
-      <div className="flex items-center gap-1 mt-3">
-        <button
-          className="bg-white rounded-r-sm px-2 py-1 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      <div className={`mt-3 ${quantity > 0 ? 'border-2 border-[#00ac25] rounded-md bg-[#00ac25]   ' : ''}`}>
+        <div className="flex items-center ">
+          <button
+          className="bg-white px-3 py-1 w-[40px] h-[40px] flex items-center justify-center border border-[#DCCBA1] rounded-tr-md rounded-br-md text-[#093785] text-lg font-bold text-center"
           onClick={() => !isDisabled && decreaseQuantity(service.id)}
           disabled={isDisabled || quantity === 0}
           aria-label="کاهش تعداد"
@@ -236,20 +237,20 @@ export default function MainMenu() {
             <Image
               src="/images/trash.png"
               alt="حذف"
-              width={16}
-              height={16}
+              width={40}
+              height={40}
             />
           ) : (
-            <span className="text-lg font-bold">-</span>
+            <span className="text-xl font-bold text-[#093785]">-</span>
           )}
         </button>
         
-        <span className="bg-white px-3 py-1 border-t border-b border-gray-300 text-sm font-bold min-w-[40px] text-center">
+        <span className="bg-white px-3 py-1 w-[40px] h-[40px] flex items-center justify-center border-t border-b border-[#DCCBA1] text-[#093785] text-lg font-bold text-center">
           {isDisabled ? 0 : quantity}
         </span>
         
         <button
-          className="bg-white rounded-l-sm px-2 py-1 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-white px-3 py-1 w-[40px] h-[40px] flex items-center justify-center border border-[#DCCBA1] rounded-tl-md rounded-bl-md text-[#093785] text-lg font-bold text-center"
           onClick={() => !isDisabled && increaseQuantity(service.id)}
           disabled={isDisabled}
           aria-label="افزایش تعداد"
@@ -261,7 +262,14 @@ export default function MainMenu() {
             height={16}
           />
         </button>
+        </div>
+        
+       {
+          quantity > 0 &&
+       <span className="text-center block text-white text-xs">انتخاب شده</span>
+        }
       </div>
+      
     </div>
   );
 }) : null}
