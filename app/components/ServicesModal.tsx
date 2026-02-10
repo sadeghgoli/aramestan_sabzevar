@@ -200,7 +200,6 @@ export default function ServicesModal({ isOpen, onClose }: ServicesModalProps) {
         isOpen={isPaymentModalOpen}
         onClose={closePaymentModal}
         onPaymentComplete={onClose}
-        amount={totalAmount}
       />
     </Modal>
   );

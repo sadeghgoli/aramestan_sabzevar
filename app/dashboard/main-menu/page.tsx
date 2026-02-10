@@ -346,7 +346,6 @@ export default function MainMenu() {
       <PaymentModal
               isOpen={isPaymentModalOpen}
               onClose={closePaymentModal}
-              amount={getTotalAmount().toString()}
             />
     </div>
   );

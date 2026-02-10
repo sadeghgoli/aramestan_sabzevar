@@ -152,6 +152,13 @@ export interface PaymentResponse {
   status: string;
   qrCode?: string;
   barcode?: string;
+  barcodeData?: {
+    qrCode?: string;
+    barcodeText?: string;
+    amount?: number;
+    currency?: string;
+    expiryTime?: string;
+  };
 }
 
 // User/Basket Context Types
