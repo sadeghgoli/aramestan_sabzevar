@@ -3,11 +3,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { ImageButton } from '../components';
+import { useRouter } from 'next/navigation';
+import { useApp } from '../../lib/contexts/AppContext';
+import { authService } from '../../lib/api';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function PhoneInput() {
+  const { login, deviceID } = useApp();
+  const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState<string[]>(['0', '9', ...Array(9).fill('')]);
   const [showKeypad, setShowKeypad] = useState(false);
   const [activeInputIndex, setActiveInputIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -74,6 +82,67 @@ export default function PhoneInput() {
   };
 
   const isFormValid = phoneNumber.every(digit => digit !== '');
+
+  const handleSubmit = async () => {
+    if (!isFormValid) return;
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const mobileNumber = phoneNumber.join('');
+
+      // Use fixed deviceID as requested
+      const currentDeviceID = '3FA85F64-5717-4562-B3FC-2C963F66AFA6';
+      localStorage.setItem('deviceID', currentDeviceID);
+      console.log('Using fixed deviceID:', currentDeviceID);
+
+      // Send OTP via authService
+      const response = await authService.login({
+        deviceID: currentDeviceID,
+        mobile: mobileNumber
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || 'خطا در ارسال کد');
+      }
+
+      // Navigate to verify-code page with mobile number
+      router.push(`/verify-code?mobile=${mobileNumber}`);
+    } catch (error: any) {
+      setError(error.message || 'خطا در ارسال کد');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAnonymousLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Use fixed deviceID as requested
+      const currentDeviceID = '3FA85F64-5717-4562-B3FC-2C963F66AFA6';
+      localStorage.setItem('deviceID', currentDeviceID);
+      console.log('Using fixed deviceID:', currentDeviceID);
+
+      // Anonymous login via authService
+      const response = await authService.unknown({
+        deviceID: currentDeviceID
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || 'خطا در ورود ناشناس');
+      }
+
+      // Navigate to dashboard for anonymous user
+      router.push('/dashboard/without-login');
+    } catch (error: any) {
+      setError(error.message || 'خطا در ورود ناشناس');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen w-full flex flex-col bg-[#ebf7f7]">
@@ -152,23 +221,28 @@ export default function PhoneInput() {
           </div>
 
          <div className="px-4 flex flex-col items-center gap-2">
+             {error && (
+               <div className="text-red-500 text-xl mb-2">{error}</div>
+             )}
              <ImageButton
                 type="success"
                 className="h-24 text-3xl w-full font-semibold z-[10]"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isLoading}
                 showArrow={true}
                 arrowSrc="/images/flash-left.png"
-                onRedirect={() => window.location.href = '/verify-code'}
+                onRedirect={handleSubmit}
              >
-             تایید
+               {isLoading ? 'در حال ورود...' : 'تایید'}
             </ImageButton>
              <ImageButton
                 type="warning"
                 className="h-24 text-3xl w-full font-semibold z-[10]"
                 showArrow={true}
                 arrowSrc="/images/flash-left.png"
+                onRedirect={handleAnonymousLogin}
+                disabled={isLoading}
              >
-             ورود ناشناس
+               {isLoading ? 'در حال ورود...' : 'ورود ناشناس'}
             </ImageButton>
          </div>
           
@@ -200,9 +274,9 @@ export default function PhoneInput() {
             ))}
             
             <button
-              onClick={() => window.location.href = '/verify-code'}
+              onClick={handleSubmit}
               className="h-24 rounded-md flex items-center justify-center bg-[#168D87] text-xl font-bold transition-colors"
-              disabled={!isFormValid}
+              disabled={!isFormValid || isLoading}
              >
                   
               <Image

@@ -3,11 +3,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { ImageButton } from '../components';
+import { useApp } from '../../lib/contexts/AppContext';
+import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function PhoneInput() {
-  const [phoneNumber, setPhoneNumber] = useState<string[]>([...Array(4).fill('')]);
+export default function VerifyCode() {
+  const { login, deviceID } = useApp();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const mobile = searchParams.get('mobile');
+  const [otpCode, setOtpCode] = useState<string[]>([...Array(5).fill('')]);
   const [showKeypad, setShowKeypad] = useState(false);
   const [activeInputIndex, setActiveInputIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -22,15 +30,13 @@ export default function PhoneInput() {
 
   const handleKeypadPress = (digit: string) => {
     if (activeInputIndex === null) return;
-    
-    // Don't allow changing the first two digits (pre-filled with 09)
-    
-    const newPhoneNumber = [...phoneNumber];
-    newPhoneNumber[activeInputIndex] = digit;
-    setPhoneNumber(newPhoneNumber);
-    
+
+    const newOtpCode = [...otpCode];
+    newOtpCode[activeInputIndex] = digit;
+    setOtpCode(newOtpCode);
+
     // Move to next input
-    if (activeInputIndex < 3) {
+    if (activeInputIndex < 4) {
       setActiveInputIndex(activeInputIndex + 1);
     } else {
       // Last digit, close keypad
@@ -40,35 +46,59 @@ export default function PhoneInput() {
 
   const handleDelete = () => {
     if (activeInputIndex === null) return;
-    
-    const newPhoneNumber = [...phoneNumber];
-    newPhoneNumber[activeInputIndex] = '';
-    setPhoneNumber(newPhoneNumber);
-    
+
+    const newOtpCode = [...otpCode];
+    newOtpCode[activeInputIndex] = '';
+    setOtpCode(newOtpCode);
+
     // Move to previous input if current is empty
-    if (activeInputIndex > 0 && newPhoneNumber[activeInputIndex] === '') {
+    if (activeInputIndex > 0 && newOtpCode[activeInputIndex] === '') {
       setActiveInputIndex(activeInputIndex - 1);
     }
   };
 
   const handleBackspace = () => {
     if (activeInputIndex === null) return;
-    
-    // Don't allow deleting the first two digits (pre-filled with 09)
-    if (activeInputIndex < 2) return;
-    
-    const newPhoneNumber = [...phoneNumber];
-    
+
+    const newOtpCode = [...otpCode];
+
     // If current input has a value, clear it
-    if (newPhoneNumber[activeInputIndex] !== '') {
-      newPhoneNumber[activeInputIndex] = '';
+    if (newOtpCode[activeInputIndex] !== '') {
+      newOtpCode[activeInputIndex] = '';
     }
-    // If current input is empty and we're not at the third input, go back and clear
-    
-    setPhoneNumber(newPhoneNumber);
+    // If current input is empty and we're not at the first input, go back and clear
+    else if (activeInputIndex > 0) {
+      setActiveInputIndex(activeInputIndex - 1);
+      newOtpCode[activeInputIndex - 1] = '';
+    }
+
+    setOtpCode(newOtpCode);
   };
 
-  const isFormValid = phoneNumber.every(digit => digit !== '');
+  const isFormValid = otpCode.every(digit => digit !== '') && otpCode.length === 5;
+
+  const handleSubmit = async () => {
+    if (!isFormValid) return;
+    if (!mobile) {
+      setError('شماره موبایل نامعتبر است، لطفا دوباره تلاش کنید.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const code = parseInt(otpCode.join(''));
+      await login(mobile, code);
+
+      // Navigate to dashboard on success
+      router.push('/dashboard');
+    } catch (error: any) {
+      setError(error.message || 'خطا در تایید کد');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen w-full flex flex-col bg-[#ebf7f7]">
@@ -125,23 +155,23 @@ export default function PhoneInput() {
 
         <div className="w-full my-24  relative bg-white rounded-md p-12">
           <h2 className="text-3xl font-bold  mb-4 text-[#093785]">
-
-          یک کد 4 رقمی به شماره موبایل  09150816030  ارسال شد، لطفا آن‌را در فیلد
-زیر وارد نمایید:
+            یک کد 5 رقمی به شماره موبایل{' '}
+            <span className="font-bold">{mobile || 'شماره شما'}</span>{' '}
+            ارسال شد، لطفا آن‌را در فیلد زیر وارد نمایید:
           </h2>
           
-          {/* Phone Number Input Fields */}
+          {/* OTP Code Input Fields */}
           <div className="flex justify-center gap-1 mb-8" dir={'ltr'}>
-            {phoneNumber.map((digit, index) => (
+            {otpCode.map((digit, index) => (
               <div
                 key={index}
                 ref={el => { inputRefs.current[index] = el; }}
-                className={`w-24 h-24 border-b-2 border-gray-200 bg-white/30  cursor-pointer flex items-center text-[#093785]  justify-center text-5xl font-bold transition-all ${
-                
+                className={`w-20 h-24 border-b-2 border-gray-200 bg-white/30  cursor-pointer flex items-center text-[#093785]  justify-center text-5xl font-bold transition-all ${
+                 
                      activeInputIndex === index
-                      ? 'border-b-2 border-green-500 bg-white/50 '
-                      : ''
-                }`}
+                       ? 'border-b-2 border-green-500 bg-white/50 '
+                       : ''
+                 }`}
                 onClick={() => handleInputClick(index)}
               >
                 {digit}
@@ -150,15 +180,18 @@ export default function PhoneInput() {
           </div>
 
          <div className="px-4 flex flex-col items-center gap-2">
+             {error && (
+               <div className="text-red-500 text-xl mb-2">{error}</div>
+             )}
              <ImageButton
                 type="success"
                 className="h-24 text-3xl w-full font-semibold z-[10]"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isLoading}
                 showArrow={true}
                 arrowSrc="/images/flash-left.png"
-                onRedirect={() => window.location.href = '/dashboard'}
+                onRedirect={handleSubmit}
              >
-             تایید
+               {isLoading ? 'در حال تایید...' : 'تایید'}
             </ImageButton>
              <ImageButton
                 type="warning"
@@ -197,20 +230,20 @@ export default function PhoneInput() {
               </button>
             ))}
             
-            <button
-              onClick={() => window.location.href = '/dashboard'}
-              disabled={!isFormValid}
-              className="h-24 rounded-md flex items-center justify-center bg-[#168D87] text-5xl font-bold transition-colors"
-            >
-                  
-              <Image
-                src="/images/enter.png"
-                alt="Aramestan"
-                width={28}
-                height={28}
-                priority
-              />
-            </button>
+             <button
+               onClick={handleSubmit}
+               disabled={!isFormValid || isLoading}
+               className="h-24 rounded-md flex items-center justify-center bg-[#168D87] text-5xl font-bold transition-colors disabled:opacity-50"
+             >
+                   
+               <Image
+                 src="/images/enter.png"
+                 alt="Aramestan"
+                 width={28}
+                 height={28}
+                 priority
+               />
+             </button>
             
             <button
               onClick={() => handleKeypadPress('0')}

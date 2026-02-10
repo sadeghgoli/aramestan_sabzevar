@@ -7,6 +7,8 @@ import ImageButton from './ImageButton';
 import CardPaymentModal from './CardPaymentModal';
 import QRPaymentModal from './QRPaymentModal';
 import PaymentResultModal from './PaymentResultModal';
+import { useApp } from '../../lib/contexts/AppContext';
+import { paymentService } from '../../lib/api';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -16,10 +18,12 @@ interface PaymentModalProps {
 }
 
 export default function PaymentModal({ isOpen, onClose, onPaymentComplete, amount }: PaymentModalProps) {
+  const { user, deviceID, basket, clearBasket, saveBasket } = useApp();
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isPaymentResultModalOpen, setIsPaymentResultModalOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
 
 
@@ -44,14 +48,67 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete, amoun
     setIsPaymentResultModalOpen(false);
   };
 
-  const handlePayment = () => {
-    if (selectedPayment) {
-      console.log(`Payment method: ${selectedPayment}, Amount: ${amount}`);
-      // Handle payment logic here
-      onClose();
-      if (onPaymentComplete) {
-        onPaymentComplete();
+  const handlePayment = async () => {
+    if (!user || !selectedPayment) return;
+
+    try {
+      setIsProcessing(true);
+
+      // Save basket to server first using context function
+      await saveBasket();
+
+      // Get payment basket info
+      const paymentResponse = await paymentService.getBasket({
+        deviceID,
+        userID: user.id
+      });
+
+      if (!paymentResponse.success) {
+        throw new Error('Failed to get payment info');
       }
+
+      // Process payment based on method
+      let paymentMethodResponse;
+      if (selectedPayment === 'card') {
+        paymentMethodResponse = await paymentService.generatePOS({
+          deviceID,
+          paymentID: paymentResponse.data?.paymentID || ''
+        });
+      } else if (selectedPayment === 'qr') {
+        paymentMethodResponse = await paymentService.generateBarcode({
+          deviceID,
+          paymentID: paymentResponse.data?.paymentID || ''
+        });
+      }
+
+      if (paymentMethodResponse?.success) {
+        // Complete payment
+        const completeResponse = await paymentService.complete({
+          deviceID,
+          userID: user.id,
+          paymentID: paymentResponse.data?.paymentID || '',
+          payMethod: selectedPayment === 'card' ? 1 : 2,
+          payCode: 'demo-code',
+          payDescription: 'Payment completed',
+          paiedPrice: parseInt(amount.replace(/,/g, ''))
+        });
+
+        if (completeResponse.success) {
+          // Clear basket and show success
+          clearBasket();
+          setIsPaymentResultModalOpen(true);
+        } else {
+          throw new Error('Payment completion failed');
+        }
+      } else {
+        throw new Error('Payment method failed');
+      }
+
+    } catch (error: any) {
+      console.error('Payment failed:', error);
+      alert('خطا در پرداخت: ' + error.message);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -76,28 +133,51 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete, amoun
         </p>
 
         <div className="flex gap-2 my-5 px-2">
-          <div className="relative w-full" 
-          onClick={() => setIsCardModalOpen(true)}
-
+          <div
+            className={`relative w-full cursor-pointer transition-opacity ${isProcessing ? 'opacity-50 pointer-events-none' : ''}`}
+            onClick={() => {
+              setSelectedPayment('card');
+              setIsCardModalOpen(true);
+            }}
           >
             <img src="/images/pos.png" alt="" className='w-full' />
+            <div className="absolute top-[15%] w-full flex justify-center">
+            <img src="/images/pos-image.png" alt="" className='w-75' />
+
+            </div>
             <div className=' absolute top-[55%] w-full flex justify-center'>
             <p className='font-bold px-8 text-[#093785] text-center text-3xl'>
                           پرداخت از طریق
             کارت‌خوان (دستگاه پوز)
                         </p>
             </div>
-           
+           <div className="absolute top-[79%] w-full flex justify-center">
+            <img src="/images/help.png" alt="" className='w-[35%]' />
+
+            </div>
           </div>
-           <div className="relative w-full"
-             onClick={() => setIsQRModalOpen(true)}
+           <div
+             className={`relative w-full cursor-pointer transition-opacity ${isProcessing ? 'opacity-50 pointer-events-none' : ''}`}
+             onClick={() => {
+               setSelectedPayment('qr');
+               setIsQRModalOpen(true);
+             }}
            >
-            <img src="/images/qr-code.png" alt="" className='w-full' />
+            <img src="/images/pos.png" alt="" className='w-full' />
+              <div className="absolute top-[15%] w-full flex justify-center">
+            <img src="/images/qrcode.png" alt="" className='w-75' />
+
+            </div>
              <div className='px-8 absolute top-[55%] w-full flex justify-center'>
             <p className='font-bold text-[#093785] text-center text-3xl'>
                          پرداخت از طریق
 اسکن QR Code با تلفن همراه
                         </p>
+                        
+            </div>
+              <div className="absolute top-[79%] w-full flex justify-center">
+            <img src="/images/help.png" alt="" className='w-[35%]' />
+
             </div>
           </div>
         </div>

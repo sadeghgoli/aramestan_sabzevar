@@ -1,7 +1,14 @@
+'use client';
 import Image from "next/image";
 import { ImageButton } from "./components";
-
+import { useRouter } from "next/navigation";
 export default function Home() {
+    const router = useRouter();
+  
+  const handleSubmit = async () => {
+      router.push(`/phone-input`);
+  };
+
   return (
     <div className="">
       {/* Video Background */}
@@ -57,6 +64,8 @@ export default function Home() {
             href="/phone-input"
             arrowSrc="/images/flash-left-blue.png"
             showArrow={true}
+            onRedirect={handleSubmit}
+
           >
             شروع
           </ImageButton>

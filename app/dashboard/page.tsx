@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { ServicesModal } from "@/app/components";
 import { useRouter } from 'next/navigation';
+import { useApp } from '../../lib/contexts/AppContext';
 
  export default function Dashboard() {
+  const { user, logout } = useApp();
   const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
   const router = useRouter();
 
@@ -31,15 +33,19 @@ import { useRouter } from 'next/navigation';
                 priority
                 />
                 <div className="text-[#305698] text-xl">
-                    <span className="font-bold ">میثم خرمپور</span>
+                    <span className="font-bold ">{user?.name || 'کاربر'}</span>
                     {' '}{' '}
                     عزیز،خوش‌آمدی!
                 </div>
         </div>
         <div className="flex gap-2 items-center">
 
-            <div  className="p-2 rounded-md items-center gap-1 text-xl bg-[#093785] block text-white flex" style={{whiteSpace: 'nowrap'}}>
-            
+            <div
+              onClick={logout}
+              className="p-2 rounded-md items-center gap-1 text-xl bg-[#093785] block text-white flex cursor-pointer hover:bg-[#072a5c] transition-colors"
+              style={{whiteSpace: 'nowrap'}}
+            >
+
             خروج از حساب کاربری
 
             <div>

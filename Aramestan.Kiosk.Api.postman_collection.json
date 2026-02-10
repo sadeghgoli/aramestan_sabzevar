@@ -1,0 +1,1589 @@
+{
+  "info": {
+    "_postman_id": "899fbce6-437d-43f0-a4a5-c144d6850e47",
+    "name": "Aramestan.Kiosk.Api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31781898",
+    "_collection_link": "https://go.postman.co/collection/3754545-899fbce6-437d-43f0-a4a5-c144d6850e47?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        
+        {
+          "name": "basket",
+          "item": [
+            {
+              "name": "save",
+              "item": [
+                {
+                  "name": "/api/basket/save",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"deviceID\": \"befd9f09-0ecf-6ec8-bb97-5450161ce2ee\",\n  \"userID\": \"e1358343-bd04-9210-1aa9-ece7c5b2b775\",\n  \"items\": [\n    {\n      \"count\": 3775,\n      \"productID\": \"0d9bdf16-57bb-984f-f7cf-8137a6821cce\"\n    },\n    {\n      \"count\": 6133,\n      \"productID\": \"44b848aa-bf93-0021-4f9c-09be889ae865\"\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/basket/save",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "basket",
+                        "save"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"deviceID\": \"befd9f09-0ecf-6ec8-bb97-5450161ce2ee\",\n  \"userID\": \"e1358343-bd04-9210-1aa9-ece7c5b2b775\",\n  \"items\": [\n    {\n      \"count\": 3775,\n      \"productID\": \"0d9bdf16-57bb-984f-f7cf-8137a6821cce\"\n    },\n    {\n      \"count\": 6133,\n      \"productID\": \"44b848aa-bf93-0021-4f9c-09be889ae865\"\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/basket/save",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "basket",
+                            "save"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "read",
+              "item": [
+                {
+                  "name": "/api/basket/read",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"userID\": \"a1b0dd7d-cfd8-421f-df7b-c24e61f20ce2\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/basket/read",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "basket",
+                        "read"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userID\": \"a1b0dd7d-cfd8-421f-df7b-c24e61f20ce2\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/basket/read",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "basket",
+                            "read"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "payment",
+          "item": [
+            {
+              "name": "basket",
+              "item": [
+                {
+                  "name": "/api/payment/basket",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"userID\": \"a1b0dd7d-cfd8-421f-df7b-c24e61f20ce2\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/payment/basket",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "payment",
+                        "basket"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userID\": \"a1b0dd7d-cfd8-421f-df7b-c24e61f20ce2\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/payment/basket",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "payment",
+                            "basket"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "last",
+              "item": [
+                {
+                  "name": "/api/payment/last",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"userID\": \"a1b0dd7d-cfd8-421f-df7b-c24e61f20ce2\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/payment/last",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "payment",
+                        "last"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userID\": \"a1b0dd7d-cfd8-421f-df7b-c24e61f20ce2\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/payment/last",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "payment",
+                            "last"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "check",
+              "item": [
+                {
+                  "name": "/api/payment/check",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"paymentID\": \"397c02a1-8294-af13-c75a-d396b843a9a8\",\n  \"userID\": \"ff49d012-67ff-790f-fdcb-d7d1d35d5e8f\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/payment/check",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "payment",
+                        "check"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"paymentID\": \"397c02a1-8294-af13-c75a-d396b843a9a8\",\n  \"userID\": \"ff49d012-67ff-790f-fdcb-d7d1d35d5e8f\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/payment/check",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "payment",
+                            "check"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "complete",
+              "item": [
+                {
+                  "name": "/api/payment/complete",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"userID\": \"83bd1db6-e11a-f042-9559-820cafdd7004\",\n  \"paymentID\": \"82dd48b4-8104-63e7-fbb2-9b7f72ef9664\",\n  \"payMethod\": 79,\n  \"payCode\": \"string\",\n  \"payDescription\": \"string\",\n  \"paiedPrice\": 692\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/payment/complete",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "payment",
+                        "complete"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userID\": \"83bd1db6-e11a-f042-9559-820cafdd7004\",\n  \"paymentID\": \"82dd48b4-8104-63e7-fbb2-9b7f72ef9664\",\n  \"payMethod\": 79,\n  \"payCode\": \"string\",\n  \"payDescription\": \"string\",\n  \"paiedPrice\": 692\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/payment/complete",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "payment",
+                            "complete"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "method",
+              "item": [
+                {
+                  "name": "barcode",
+                  "item": [
+                    {
+                      "name": "/api/payment/method/barcode",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"deviceID\": \"4e72190e-e1be-d5d0-282f-ec9929241322\",\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/payment/method/barcode",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "payment",
+                            "method",
+                            "barcode"
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "app-version",
+                                "value": "string"
+                              },
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"deviceID\": \"4e72190e-e1be-d5d0-282f-ec9929241322\",\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/payment/method/barcode",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "payment",
+                                "method",
+                                "barcode"
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "pos",
+                  "item": [
+                    {
+                      "name": "/api/payment/method/pos",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"deviceID\": \"4e72190e-e1be-d5d0-282f-ec9929241322\",\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/payment/method/pos",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "payment",
+                            "method",
+                            "pos"
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "app-version",
+                                "value": "string"
+                              },
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"deviceID\": \"4e72190e-e1be-d5d0-282f-ec9929241322\",\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/payment/method/pos",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "payment",
+                                "method",
+                                "pos"
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "products",
+          "item": [
+            {
+              "name": "all",
+              "item": [
+                {
+                  "name": "/api/products/all",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/products/all",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "products",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/products/all",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "products",
+                            "all"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "id",
+              "item": [
+                {
+                  "name": "/api/products/id",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"productID\": \"ab37b6cc-c4ac-c863-6e03-9a1fc0459522\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/products/id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "products",
+                        "id"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"productID\": \"ab37b6cc-c4ac-c863-6e03-9a1fc0459522\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/products/id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "products",
+                            "id"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "ids",
+              "item": [
+                {
+                  "name": "/api/products/ids",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"productsID\": [\n    \"7e6056a0-f1f4-1c9c-714a-4225db6d49b0\",\n    \"7ef6e2d1-e08d-7ed8-d7ba-ea0d4b9d5ffe\"\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/products/ids",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "products",
+                        "ids"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"productsID\": [\n    \"7e6056a0-f1f4-1c9c-714a-4225db6d49b0\",\n    \"7ef6e2d1-e08d-7ed8-d7ba-ea0d4b9d5ffe\"\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/products/ids",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "products",
+                            "ids"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "actives",
+              "item": [
+                {
+                  "name": "/api/products/actives",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/products/actives",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "products",
+                        "actives"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/products/actives",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "products",
+                            "actives"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "add",
+              "item": [
+                {
+                  "name": "/api/products/add",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"discountPercentValue\": 5630,\n  \"isActive\": false,\n  \"max\": 4287,\n  \"min\": 7092,\n  \"step\": 5019,\n  \"title\": \"string\",\n  \"unitPrice\": 3890,\n  \"vatValue\": 117,\n  \"description\": \"string\",\n  \"iconUrlAddress\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/products/add",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "products",
+                        "add"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"discountPercentValue\": 5630,\n  \"isActive\": false,\n  \"max\": 4287,\n  \"min\": 7092,\n  \"step\": 5019,\n  \"title\": \"string\",\n  \"unitPrice\": 3890,\n  \"vatValue\": 117,\n  \"description\": \"string\",\n  \"iconUrlAddress\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/products/add",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "products",
+                            "add"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "edit",
+              "item": [
+                {
+                  "name": "/api/products/edit",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"discountPercentValue\": 1383,\n  \"isActive\": false,\n  \"max\": 5430,\n  \"min\": 1306,\n  \"productID\": \"c2fc366c-35cb-ea8b-4981-7f1df700d3d2\",\n  \"step\": 9691,\n  \"title\": \"string\",\n  \"unitPrice\": 6519,\n  \"vatValue\": 836,\n  \"description\": \"string\",\n  \"iconUrlAddress\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/products/edit",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "products",
+                        "edit"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"discountPercentValue\": 1383,\n  \"isActive\": false,\n  \"max\": 5430,\n  \"min\": 1306,\n  \"productID\": \"c2fc366c-35cb-ea8b-4981-7f1df700d3d2\",\n  \"step\": 9691,\n  \"title\": \"string\",\n  \"unitPrice\": 6519,\n  \"vatValue\": 836,\n  \"description\": \"string\",\n  \"iconUrlAddress\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/products/edit",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "products",
+                            "edit"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "item": [
+                {
+                  "name": "/api/products/delete",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"productID\": \"ab37b6cc-c4ac-c863-6e03-9a1fc0459522\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/products/delete",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "products",
+                        "delete"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"productID\": \"ab37b6cc-c4ac-c863-6e03-9a1fc0459522\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/products/delete",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "products",
+                            "delete"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "auth",
+          "item": [
+            {
+              "name": "unknown",
+              "item": [
+                {
+                  "name": "/api/auth/unknown",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"deviceID\": \"507f7251-c4b1-8c8a-0532-9f85c87fbbf2\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/unknown",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "unknown"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"deviceID\": \"507f7251-c4b1-8c8a-0532-9f85c87fbbf2\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/auth/unknown",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "auth",
+                            "unknown"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "login",
+              "item": [
+                {
+                  "name": "/api/auth/login",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"deviceID\": \"61f87df5-9ba6-5108-cdc4-e9269aa867ba\",\n  \"mobile\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/login",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "login"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"deviceID\": \"61f87df5-9ba6-5108-cdc4-e9269aa867ba\",\n  \"mobile\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/auth/login",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "auth",
+                            "login"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "verify",
+              "item": [
+                {
+                  "name": "/api/auth/verify",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"deviceID\": \"ff6ceb58-0767-9184-6079-c47237fb132f\",\n  \"mobile\": \"string\",\n  \"otpCode\": 9497\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/verify",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "verify"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"deviceID\": \"ff6ceb58-0767-9184-6079-c47237fb132f\",\n  \"mobile\": \"string\",\n  \"otpCode\": 9497\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/auth/verify",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "auth",
+                            "verify"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.request.headers.upsert({\r",
+          "    key: \"app-version\",\r",
+          "    value: \"1\"\r",
+          "});"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "/"
+    }
+  ]
+}

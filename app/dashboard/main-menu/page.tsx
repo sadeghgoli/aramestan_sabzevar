@@ -2,11 +2,16 @@
 
 import { ImageButton } from "@/app/components";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PaymentModal from "../../components/PaymentModal";
+import { useApp } from '../../../lib/contexts/AppContext';
+import { productsService } from '../../../lib/api';
 
 export default function MainMenu() {
+  const { basket, addToBasket, updateBasketItem, removeFromBasket, getTotalAmount } = useApp();
   const [activeTab, setActiveTab] = useState('all');
+  const [isLoading, setIsLoading] = useState(false);
+  const [services, setServices] = useState<any[]>([]);
   const [serviceQuantities, setServiceQuantities] = useState<{ [key: number]: number }>({});
   const [disabledServices, setDisabledServices] = useState<{ [key: number]: boolean }>({
     2: true, // استرداد هزینه
@@ -14,7 +19,26 @@ export default function MainMenu() {
     6: true, // نصب سنگ قبر
   });
 
-  const services = [
+  // Load products on mount
+  useEffect(() => {
+    loadServices();
+  }, []);
+
+  const loadServices = async () => {
+    try {
+      setIsLoading(true);
+      const response = await productsService.getActive();
+      if (response.success && response.data) {
+        setServices(response.data.products);
+      }
+    } catch (error) {
+      console.error('Failed to load services:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const originalServices = [
     { id: 1, name: 'خرید رزرو مدفن برای شهروندان', description: 'شروع از 18٫590٫000 تومان', img: '/images/serv-6.png' },
     { id: 2, name: 'استرداد هزینه', description: '156,000 تومان', img: '/images/serv-1.png' },
     { id: 3, name: 'انتقال قبر', description: '1,290,000 تومان', img: '/images/serv-2.png' },
@@ -29,29 +53,26 @@ export default function MainMenu() {
     { id: 12, name: 'انتقال قبر', description: '1,290,000 تومان', img: '/images/serv-2.png' },
   ];
 
-  const increaseQuantity = (serviceId: number) => {
-    setServiceQuantities(prev => ({
-      ...prev,
-      [serviceId]: (prev[serviceId] || 0) + 1
-    }));
+  const increaseQuantity = async (serviceId: string) => {
+    await addToBasket(serviceId, 1);
   };
 
-  const decreaseQuantity = (serviceId: number) => {
-    setServiceQuantities(prev => {
-      const newQuantities = { ...prev };
-      if (newQuantities[serviceId] > 0) {
-        newQuantities[serviceId]--;
-      }
-      return newQuantities;
-    });
+  const decreaseQuantity = async (serviceId: string) => {
+    const item = basket.find(item => item.productID === serviceId);
+    if (item && item.count > 1) {
+      await updateBasketItem(serviceId, item.count - 1);
+    } else {
+      await removeFromBasket(serviceId);
+    }
   };
 
-  const removeService = (serviceId: number) => {
-    setServiceQuantities(prev => {
-      const newQuantities = { ...prev };
-      delete newQuantities[serviceId];
-      return newQuantities;
-    });
+  const removeService = async (serviceId: string) => {
+    await removeFromBasket(serviceId);
+  };
+
+  const getItemQuantity = (serviceId: string) => {
+    const item = basket.find(item => item.productID === serviceId);
+    return item?.count || 0;
   };
 
   const toggleDisabled = (serviceId: number) => {
@@ -157,92 +178,106 @@ export default function MainMenu() {
 
         {/* Tab Content */}
         <div className="min-h-[55vh] max-h-[400px] overflow-y-auto mb-6">
-          {activeTab === 'all' && (
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <p className="text-xl">در حال بارگذاری...</p>
+            </div>
+          ) : activeTab === 'all' && (
             <div className="flex justify-between flex-wrap ">
-               {services.map((service, index) => (
-                 <div key={service.id} className={`w-[33.3%] p-3 border-b-2 border-[#dccba1] flex flex-col items-center justify-center ${disabledServices[service.id] ? 'opacity-60' : ''} ${(index + 1) % 3 === 0 ? 'border-l-0' : 'border-l-2 '}`}>
-                  <Image
-                    src={service.img}
-                    alt="Besmelah"
-                    width={180}
-                    height={180}
-                    priority
-                  />
-                  <p className="text-center text-lg font-bold text-[#093785] mt-2">
-                    {service.name}
-                  </p>
-                  <p className="text-center text-lg text-[#093785] mt-3">
-                    {service.description}
-                  </p>
-                  
-                  {/* Temporarily Disabled Toggle */}
-                  <button
-                    className={`${
-                      disabledServices[service.id]
-                        ? 'bg-gray-100 text-gray-800 border border-gray-300 mt-4 px-3 py-1 text-xl  rounded-md '
-                        : ''
-                    }`}
-                    onClick={() => toggleDisabled(service.id)}
-                  >
-                    {disabledServices[service.id] ? 'موقتا غیرفعال' : ''}
-                  </button>
-                  {disabledServices[service.id] ? '' : 
-                  <div className="flex items-center gap-1 mt-3">
-                    <button
-                      className="bg-white rounded-r-sm px-2 py-1 border border-gray-300"
-                      onClick={() => removeService(service.id)}
-                      disabled={disabledServices[service.id]}
-                    >
-                      <Image
-                        src="/images/trash.png"
-                        alt=""
-                        width={16}
-                        height={16}
-                        className=""
-                      />
-                    </button>
-                    <button
-                      className="bg-white px-3 py-1 border-t border-b border-gray-300 text-sm"
-                      onClick={() => decreaseQuantity(service.id)}
-                      disabled={disabledServices[service.id]}
-                    >
-                      -
-                    </button>
-                    <span className="bg-white px-3 py-1 border-t border-b border-gray-300 text-sm font-bold">
-                      {serviceQuantities[service.id] || 0}
-                    </span>
-                    <button
-                      className="bg-white px-3 py-1 border-t border-b border-gray-300 text-sm"
-                      onClick={() => increaseQuantity(service.id)}
-                      disabled={disabledServices[service.id]}
-                    >
-                      +
-                    </button>
-                    <button
-                      className="bg-white rounded-l-sm px-2 py-1 border border-gray-300"
-                      onClick={() => increaseQuantity(service.id)}
-                      disabled={disabledServices[service.id]}
-                    >
-                      <Image
-                        src="/images/plus.png"
-                        alt=""
-                        width={16}
-                        height={16}
-                        className=""
-                      />
-                    </button>
-                  </div>
-                  }
-                  
-                </div>
-              ))}
+               
+
+
+
+
+
+
+            {services && services.length > 0 ? services.map((service, index) => {
+  const quantity = getItemQuantity(service.id);
+  const isDisabled = disabledServices[service.id] || false;
+  
+  // محاسبه border-left بر اساس موقعیت در ردیف
+  const isFirstInRow = index % 3 === 0;
+  const borderLeftClass = isFirstInRow ? 'border-l-0' : 'border-l-2';
+  
+  return (
+    <div 
+      key={`service-${service.id}-${index}`} 
+      className={`w-[33.3%] p-3 border-b-2 border-[#dccba1] flex flex-col items-center justify-center ${
+        isDisabled ? 'opacity-60 cursor-not-allowed' : ''
+      } ${borderLeftClass}`}
+    >
+      <Image
+        src={service.iconUrlAddress || '/images/serv-1.png'}
+        alt={service.title}
+        width={180}
+        height={180}
+        priority
+        className={isDisabled ? 'grayscale' : ''}
+      />
+      
+      <p className="text-center text-lg font-bold text-[#093785] mt-2">
+        {service.title}
+        {isDisabled && <span className="text-red-500 text-sm mr-2"> (غیرفعال)</span>}
+      </p>
+      
+      <p className="text-center text-lg text-[#093785] mt-3">
+        {service.unitPrice?.toLocaleString('fa-IR')} تومان
+      </p>
+      
+      {/* Quantity Controls */}
+      <div className="flex items-center gap-1 mt-3">
+        <button
+          className="bg-white rounded-r-sm px-2 py-1 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => !isDisabled && decreaseQuantity(service.id)}
+          disabled={isDisabled || quantity === 0}
+          aria-label="کاهش تعداد"
+        >
+          {quantity === 1 ? (
+            <Image
+              src="/images/trash.png"
+              alt="حذف"
+              width={16}
+              height={16}
+            />
+          ) : (
+            <span className="text-lg font-bold">-</span>
+          )}
+        </button>
+        
+        <span className="bg-white px-3 py-1 border-t border-b border-gray-300 text-sm font-bold min-w-[40px] text-center">
+          {isDisabled ? 0 : quantity}
+        </span>
+        
+        <button
+          className="bg-white rounded-l-sm px-2 py-1 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => !isDisabled && increaseQuantity(service.id)}
+          disabled={isDisabled}
+          aria-label="افزایش تعداد"
+        >
+          <Image
+            src="/images/plus.png"
+            alt="افزودن"
+            width={16}
+            height={16}
+          />
+        </button>
+      </div>
+    </div>
+  );
+}) : null}
+
+
+
+
+
+
              
             </div>
           )}
 
           {activeTab === 'services' && (
             <div className="space-y-3">
-              {services.map((service) => (
+              {services && services.map((service) => (
                 <div key={service.id} className="flex items-center gap-3 bg-[#f6f9ff] p-4 rounded-lg border border-[#dde9ff]">
                  
                 </div>
@@ -279,7 +314,7 @@ export default function MainMenu() {
           <div className="absolute w-full top-10 right-0">
            <div className="flex justify-between max-w-lg mx-auto mt-8">
              <span className="text-[#093785] text-3xl font-bold">مبلغ قابل پرداخت :</span>
-            <span className="text-[#093785] text-3xl font-bold">18,940,000 تومان</span>
+            <span className="text-[#093785] text-3xl font-bold">{getTotalAmount().toLocaleString()} تومان</span>
            </div>
 
              
@@ -311,7 +346,7 @@ export default function MainMenu() {
       <PaymentModal
               isOpen={isPaymentModalOpen}
               onClose={closePaymentModal}
-              amount="12"
+              amount={getTotalAmount().toString()}
             />
     </div>
   );

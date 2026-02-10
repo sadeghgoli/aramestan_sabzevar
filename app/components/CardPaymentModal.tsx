@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Modal from './Modal';
 import ImageButton from './ImageButton';
+import { useApp } from '../../lib/contexts/AppContext';
 
 interface CardPaymentModalProps {
   isOpen: boolean;
