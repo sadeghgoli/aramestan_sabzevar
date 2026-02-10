@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import QRCode from 'qrcode';
 import Modal from './Modal';
 import ImageButton from './ImageButton';
 import { useApp } from '../../lib/contexts/AppContext';
@@ -102,8 +103,20 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
             setQrCode(qrCodeData);
           } else {
             // If it's just text data, we need to generate a QR code from it
-            // For now, use a placeholder image
-            setQrCode('/images/qr-code-big.png');
+            try {
+              const qrDataUrl = await QRCode.toDataURL(qrCodeData, {
+                width: 256,
+                margin: 2,
+                color: {
+                  dark: '#000000',
+                  light: '#FFFFFF'
+                }
+              });
+              setQrCode(qrDataUrl);
+            } catch (error) {
+              console.error('Error generating QR code:', error);
+              setQrCode('/images/qr-code-big.png');
+            }
           }
           setPaymentID(basketResponse.data.paymentID);
           setCountdown(29);
