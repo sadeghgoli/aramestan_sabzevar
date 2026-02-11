@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import QRCode from 'qrcode';
 import Modal from './Modal';
 import ImageButton from './ImageButton';
 import { useApp } from '../../lib/contexts/AppContext';
@@ -13,9 +12,10 @@ interface QRPaymentModalProps {
   onClose: () => void;
   onPaymentComplete?: () => void;
   amount: string;
+  qrCodeData?: string | null;
 }
 
-export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amount }: QRPaymentModalProps) {
+export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amount, qrCodeData }: QRPaymentModalProps) {
   const { user, deviceID } = useApp();
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -26,14 +26,13 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
-      setQrCode(null);
+      setQrCode(qrCodeData || null);
       setError(null);
       setIsGenerating(false);
       setCountdown(29);
       setPaymentID(null);
-      generateQRCode();
     }
-  }, [isOpen]);
+  }, [isOpen, qrCodeData]);
 
   // Countdown timer
   useEffect(() => {
@@ -57,6 +56,7 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
       setError(null);
 
       // First get payment basket info
+      console.log('Sending basket request with:', { deviceID, userID: user.id });
       const basketResponse = await paymentService.getBasket({
         deviceID,
         userID: user.id
@@ -103,20 +103,8 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
             setQrCode(qrCodeData);
           } else {
             // If it's just text data, we need to generate a QR code from it
-            try {
-              const qrDataUrl = await QRCode.toDataURL(qrCodeData, {
-                width: 256,
-                margin: 2,
-                color: {
-                  dark: '#000000',
-                  light: '#FFFFFF'
-                }
-              });
-              setQrCode(qrDataUrl);
-            } catch (error) {
-              console.error('Error generating QR code:', error);
-              setQrCode('/images/qr-code-big.png');
-            }
+            // For now, use a placeholder image
+            setQrCode('/images/qr-code-big.png');
           }
           setPaymentID(basketResponse.data.paymentID);
           setCountdown(29);

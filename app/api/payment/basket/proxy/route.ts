@@ -5,6 +5,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { userID, deviceID } = body;
 
+    console.log('Basket proxy request body:', body);
+
     // Validate required fields
     if (!userID) {
       return NextResponse.json(
@@ -27,6 +29,8 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
     console.log('Payment Basket API Response:', data);
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
 
     // Return response from external API
     return NextResponse.json(data, { 
@@ -34,8 +38,13 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Payment basket proxy error:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    });
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

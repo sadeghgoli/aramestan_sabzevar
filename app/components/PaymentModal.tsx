@@ -27,6 +27,7 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
   const [totalAmount, setTotalAmount] = useState(0);
   const [formattedAmount, setFormattedAmount] = useState('0 تومان');
   const [error, setError] = useState<string | null>(null);
+  const [qrCodeData, setQrCodeData] = useState<string | null>(null);
 
   // Calculate total amount when modal opens or basket changes
   useEffect(() => {
@@ -60,8 +61,41 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
     setIsCardModalOpen(true);
   };
 
-  const openQRPayment = () => {
-    setIsQRModalOpen(true);
+  const openQRPayment = async () => {
+    if (!user || totalAmount <= 0) return;
+    
+    try {
+      setError(null);
+      
+      // Save basket to server first using context function
+      await saveBasket();
+
+      // Get payment basket info
+      const paymentResponse = await paymentService.getBasket({
+        deviceID,
+        userID: user.id
+      });
+
+      if (!paymentResponse.success) {
+        throw new Error('Failed to get payment info');
+      }
+
+      // Generate QR code
+      const qrResponse = await paymentService.generateBarcode({
+        deviceID,
+        paymentID: paymentResponse.data?.paymentID || ''
+      });
+
+      if (qrResponse.success && qrResponse.data?.qrCode) {
+        setQrCodeData(qrResponse.data.qrCode);
+        setIsQRModalOpen(true);
+      } else {
+        throw new Error('Failed to generate QR code');
+      }
+    } catch (error: any) {
+      console.error('QR generation failed:', error);
+      setError('خطا در تولید کد QR: ' + error.message);
+    }
   };
 
   const closeCardPayment = () => {
@@ -209,32 +243,35 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
 
             </div>
           </div>
-           <div
-             className={`relative w-full cursor-pointer transition-opacity ${
-               isProcessing || isLoadingTotal || totalAmount <= 0 || error ? 'opacity-50 pointer-events-none' : ''
-             }`}
-             onClick={() => {
-               if (!isProcessing && !isLoadingTotal && totalAmount > 0 && !error) {
-                 setSelectedPayment('qr');
-                 setIsQRModalOpen(true);
-               }
-             }}
-           >
+            <div
+               className={`relative w-full cursor-pointer transition-opacity ${
+                 isProcessing || isLoadingTotal || totalAmount <= 0 || error ? 'opacity-50 pointer-events-none' : ''
+               }`}
+               onClick={() => {
+                 if (!isProcessing && !isLoadingTotal && totalAmount > 0 && !error) {
+                   setSelectedPayment('qr');
+                   openQRPayment();
+                 }
+               }}
+            >
             <img src="/images/pos.png" alt="" className='w-full' />
               <div className="absolute top-[15%] w-full flex justify-center">
-            <img src="/images/qrcode.png" alt="" className='w-75' />
-
+            {qrCodeData ? (
+              <img src={qrCodeData} alt="QR Code" className='w-75' />
+            ) : (
+              <img src="/images/qrcode.png" alt="" className='w-75' />
+            )}
             </div>
              <div className='px-8 absolute top-[55%] w-full flex justify-center'>
             <p className='font-bold text-[#093785] text-center text-3xl'>
                          پرداخت از طریق
-اسکن QR Code با تلفن همراه
+            اسکن QR Code با تلفن همراه
                         </p>
                         
             </div>
               <div className="absolute top-[79%] w-full flex justify-center">
             <img src="/images/help.png" alt="" className='w-[35%]' />
-
+ 
             </div>
           </div>
         </div>
@@ -243,7 +280,7 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
         // When card payment is complete, show success modal
         setIsPaymentResultModalOpen(true);
       }}/>
-      <QRPaymentModal isOpen={isQRModalOpen} onClose={closeQRPayment} amount={formattedAmount} onPaymentComplete={() => {
+      <QRPaymentModal isOpen={isQRModalOpen} onClose={closeQRPayment} amount={formattedAmount} qrCodeData={qrCodeData} onPaymentComplete={() => {
         // When QR payment is complete, show success modal
         setIsPaymentResultModalOpen(true);
       }}/>
