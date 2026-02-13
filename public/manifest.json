@@ -1,0 +1,42 @@
+{
+  "name": "آرامستان سبزوار",
+  "short_name": "آرامستان",
+  "description": "سیستم مدیریت خدمات آرامستان شهر سبزوار",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#093785",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/images/aramestan-logo-letter.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/aramestan-logo-letter.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "business"],
+  "shortcuts": [
+    {
+      "name": "صفحه اصلی",
+      "short_name": "صفحه اصلی",
+      "description": "رفتن به صفحه اصلی",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/images/aramestan-logo-letter.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}
