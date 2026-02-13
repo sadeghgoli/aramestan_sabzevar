@@ -72,7 +72,6 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
 
       // Get payment basket info
       const paymentResponse = await paymentService.getBasket({
-        deviceID,
         userID: user.id
       });
 
@@ -129,7 +128,6 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
 
       // Get payment basket info
       const paymentResponse = await paymentService.getBasket({
-        deviceID,
         userID: user.id
       });
 
@@ -154,7 +152,6 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
       if (paymentMethodResponse?.success) {
         // Complete payment
         const completeResponse = await paymentService.complete({
-          deviceID,
           userID: user.id,
           paymentID: paymentResponse.data?.paymentID || '',
           payMethod: selectedPayment === 'card' ? 1 : 2,

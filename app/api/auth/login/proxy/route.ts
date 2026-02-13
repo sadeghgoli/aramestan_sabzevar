@@ -12,16 +12,16 @@ function generateUUID(): string {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { deviceID, mobile } = body;
+    const { mobile } = body;
     
-    // Use fixed deviceID as requested
-    const finalDeviceID = '3FA85F64-5717-4562-B3FC-2C963F66AFA6';
-    console.log('Using fixed deviceID:', finalDeviceID);
+    // Get device MAC from header
+    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
+    console.log('Using deviceMAC from header:', deviceMAC);
 
     // Validate required fields
-    if (!finalDeviceID || !mobile) {
+    if (!deviceMAC || !mobile) {
       return NextResponse.json(
-        { success: false, error: 'deviceID and mobile are required' },
+        { success: false, error: 'deviceMAC and mobile are required' },
         { status: 400 }
       );
     }
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         'app-version': '1',
       },
       body: JSON.stringify({
-        deviceID: finalDeviceID,
+        deviceID: deviceMAC,
         mobile
       })
     });
@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
       status: response.status 
     });
     
-    // Set deviceID cookie
-    loginResponse.cookies.set('device-id', finalDeviceID, {
+    // Set deviceMAC cookie
+    loginResponse.cookies.set('device-mac', deviceMAC, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

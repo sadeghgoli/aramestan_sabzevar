@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
+    // Get device MAC from header
+    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
+    console.log('Using deviceMAC from header:', deviceMAC);
+    
     // Forward request to external API
     const response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/products/actives', {
       method: 'POST',

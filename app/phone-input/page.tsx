@@ -9,7 +9,7 @@ import { authService } from '../../lib/api';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function PhoneInput() {
-  const { login, deviceID } = useApp();
+  const { login } = useApp();
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState<string[]>(['0', '9', ...Array(9).fill('')]);
   const [showKeypad, setShowKeypad] = useState(false);
@@ -92,14 +92,13 @@ export default function PhoneInput() {
 
       const mobileNumber = phoneNumber.join('');
 
-      // Use fixed deviceID as requested
-      const currentDeviceID = '3FA85F64-5717-4562-B3FC-2C963F66AFA6';
-      localStorage.setItem('deviceID', currentDeviceID);
-      console.log('Using fixed deviceID:', currentDeviceID);
+      // Use fixed deviceMAC as requested
+      const currentDeviceMAC = '5C-9A-D8-58-81-95';
+      localStorage.setItem('deviceMAC', currentDeviceMAC);
+      console.log('Using fixed deviceMAC:', currentDeviceMAC);
 
       // Send OTP via authService
       const response = await authService.login({
-        deviceID: currentDeviceID,
         mobile: mobileNumber
       });
 
@@ -121,14 +120,14 @@ export default function PhoneInput() {
       setIsLoading(true);
       setError(null);
 
-      // Use fixed deviceID as requested
-      const currentDeviceID = '3FA85F64-5717-4562-B3FC-2C963F66AFA6';
-      localStorage.setItem('deviceID', currentDeviceID);
-      console.log('Using fixed deviceID:', currentDeviceID);
+      // Use fixed deviceMAC as requested
+      const currentDeviceMAC = '5C-9A-D8-58-81-95';
+      localStorage.setItem('deviceMAC', currentDeviceMAC);
+      console.log('Using fixed deviceMAC:', currentDeviceMAC);
 
       // Anonymous login via authService
       const response = await authService.unknown({
-        deviceID: currentDeviceID
+        deviceID: currentDeviceMAC
       });
 
       if (!response.success) {

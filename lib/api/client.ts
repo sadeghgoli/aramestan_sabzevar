@@ -22,6 +22,9 @@ class ApiClient {
     // Request interceptor to add auth token if available
     this.client.interceptors.request.use(
       (config) => {
+        // Add X-Device-MAC header to all requests
+        config.headers['X-Device-MAC'] = '5C-9A-D8-58-81-95';
+        
         // You can add auth token here if needed
         // const token = localStorage.getItem('authToken');
         // if (token) {

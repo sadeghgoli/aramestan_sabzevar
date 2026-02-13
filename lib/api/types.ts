@@ -8,7 +8,6 @@ export interface ApiResponse<T = any> {
 
 // Common request types
 export interface BaseRequest {
-  deviceID: string;
 }
 
 // Auth API Types
@@ -17,12 +16,10 @@ export interface AuthUnknownRequest extends BaseRequest {
 }
 
 export interface AuthLoginRequest extends BaseRequest {
-  deviceID: string;
   mobile: string;
 }
 
 export interface AuthVerifyRequest extends BaseRequest {
-  deviceID: string;
   mobile: string;
   otpCode: number;
 }

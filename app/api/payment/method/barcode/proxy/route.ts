@@ -3,14 +3,17 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { deviceID, paymentID } = body;
-
+    const { paymentID } = body;
+    
+    // Get device MAC from header
+    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
+    console.log('Using deviceMAC from header:', deviceMAC);
     console.log('Barcode proxy request body:', body);
 
     // Validate required fields
-    if (!deviceID || !paymentID) {
+    if (!deviceMAC || !paymentID) {
       return NextResponse.json(
-        { success: false, error: 'deviceID and paymentID are required' },
+        { success: false, error: 'deviceMAC and paymentID are required' },
         { status: 400 }
       );
     }
@@ -23,7 +26,7 @@ export async function POST(request: NextRequest) {
         'app-version': '1',
       },
       body: JSON.stringify({
-        deviceID,
+        deviceID: deviceMAC,
         paymentID
       })
     });

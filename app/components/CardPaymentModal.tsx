@@ -55,7 +55,6 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
 
       // First get payment basket info
       const basketResponse = await paymentService.getBasket({
-        deviceID,
         userID: user.id
       });
 
@@ -97,7 +96,6 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
     try {
       // Check payment status
       const checkResponse = await paymentService.check({
-        deviceID,
         paymentID,
         userID: user.id
       });
@@ -105,7 +103,6 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
       if (checkResponse.success && checkResponse.data?.status === 'completed') {
         // Complete payment
         const completeResponse = await paymentService.complete({
-          deviceID,
           userID: user.id,
           paymentID,
           payMethod: 1, // POS payment method

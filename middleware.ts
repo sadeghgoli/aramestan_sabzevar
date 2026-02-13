@@ -49,6 +49,7 @@ export function middleware(request: NextRequest) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('x-user-id', payload.userId);
     requestHeaders.set('x-user-mobile', payload.mobile);
+    requestHeaders.set('X-Device-MAC', '5C-9A-D8-58-81-95');
     
     return NextResponse.next({
       request: {

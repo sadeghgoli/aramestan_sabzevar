@@ -49,26 +49,27 @@ function createSimpleToken(payload: any, secret: string): string {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { mobile, otpCode, deviceID: bodyDeviceID } = body;
+    const { mobile, otpCode } = body;
     
-    // Use fixed deviceID as requested
-    const deviceID = '3FA85F64-5717-4562-B3FC-2C963F66AFA6';
-    console.log('Using fixed deviceID:', deviceID);
+    // Get device MAC from header
+    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
+    console.log('Using deviceMAC from header:', deviceMAC);
 
     // Debug logging
     console.log('Verify request body:', { mobile, otpCode, typeOfOtpCode: typeof otpCode });
     console.log('Request headers:', {
       'Content-Type': 'application/json',
-      'app-version': '1'
+      'app-version': '1',
+      'X-Device-MAC': deviceMAC
     });
     console.log('Request URL:', 'http://apikiosk.aramestan.sabzevar.ir/api/auth/verify');
-    console.log('Using deviceID:', deviceID);
+    console.log('Using deviceMAC:', deviceMAC);
 
     // Validate required fields
-    if (!deviceID || !mobile || !otpCode) {
-      console.log('Validation failed:', { deviceID: !!deviceID, mobile: !!mobile, otpCode: !!otpCode });
+    if (!deviceMAC || !mobile || !otpCode) {
+      console.log('Validation failed:', { deviceMAC: !!deviceMAC, mobile: !!mobile, otpCode: !!otpCode });
       return NextResponse.json(
-        { success: false, error: 'deviceID, mobile and otpCode are required' },
+        { success: false, error: 'deviceMAC, mobile and otpCode are required' },
         { status: 400 }
       );
     }
@@ -77,7 +78,6 @@ export async function POST(request: NextRequest) {
     let response;
     try {
       const requestBody = JSON.stringify({
-        deviceID,
         mobile,
         otpCode: Number(otpCode) // Ensure otpCode is sent as a number
       });
@@ -111,8 +111,6 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Debug logging
-    console.log('External API response:', { status: response.status, data });
 
     // Check if verification was successful
     if (data.isOK && data.data) {
@@ -120,7 +118,7 @@ export async function POST(request: NextRequest) {
       const token = createSimpleToken({
         userId: data.data.userID,
         mobile: mobile,
-        deviceID: deviceID,
+        deviceID: deviceMAC,
         user: {
           id: data.data.userID,
           mobile: mobile

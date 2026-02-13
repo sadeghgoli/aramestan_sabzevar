@@ -58,7 +58,6 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
       // First get payment basket info
       console.log('Sending basket request with:', { deviceID, userID: user.id });
       const basketResponse = await paymentService.getBasket({
-        deviceID,
         userID: user.id
       });
 
@@ -132,7 +131,6 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
     try {
       // Check payment status
       const checkResponse = await paymentService.check({
-        deviceID,
         paymentID,
         userID: user.id
       });
@@ -140,7 +138,6 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
       if (checkResponse.success && checkResponse.data?.status === 'completed') {
         // Complete payment
         const completeResponse = await paymentService.complete({
-          deviceID,
           userID: user.id,
           paymentID,
           payMethod: 2, // QR payment method

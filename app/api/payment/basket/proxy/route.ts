@@ -3,8 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userID, deviceID } = body;
-
+    const { userID } = body;
+    
+    // Get device MAC from header
+    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
+    console.log('Using deviceMAC from header:', deviceMAC);
     console.log('Basket proxy request body:', body);
 
     // Validate required fields

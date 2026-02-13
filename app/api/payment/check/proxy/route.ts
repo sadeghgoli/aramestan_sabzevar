@@ -4,6 +4,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { paymentID, userID } = body;
+    
+    // Get device MAC from header
+    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
+    console.log('Using deviceMAC from header:', deviceMAC);
 
     // Validate required fields
     if (!paymentID || !userID) {

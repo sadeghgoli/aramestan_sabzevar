@@ -3,12 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { deviceID, userID, items } = body;
+    const { userID, items } = body;
+    
+    // Get device MAC from header
+    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
+    console.log('Using deviceMAC from header:', deviceMAC);
 
     // Validate required fields
-    if (!deviceID || !userID || !items) {
+    if (!userID || !items) {
       return NextResponse.json(
-        { success: false, error: 'deviceID, userID and items are required' },
+        { success: false, error: 'userID and items are required' },
         { status: 400 }
       );
     }
@@ -39,7 +43,7 @@ export async function POST(request: NextRequest) {
         'app-version': '1',
       },
       body: JSON.stringify({
-        deviceID,
+        deviceID: deviceMAC,
         userID,
         items
       })

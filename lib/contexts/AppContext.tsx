@@ -176,7 +176,6 @@ export function AppProvider({ children }: AppProviderProps) {
 
       // Only verify OTP here. The OTP send (auth/login) is done in phone-input page.
       const verifyResponse = await authService.verify({
-        deviceID: state.deviceID,
         mobile,
         otpCode
       });
@@ -210,7 +209,7 @@ export function AppProvider({ children }: AppProviderProps) {
   // Load basket from API
   const loadBasket = async (userID: string) => {
     try {
-      const response = await basketService.read({ userID, deviceID: state.deviceID });
+      const response = await basketService.read({ userID });
       if (response.success && response.data?.items) {
         // Convert basket items to BasketItemWithProduct
         const basketItems: BasketItemWithProduct[] = [];

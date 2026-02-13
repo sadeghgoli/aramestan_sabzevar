@@ -7,7 +7,7 @@ import { useApp } from '../../lib/contexts/AppContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 function VerifyCodeContent() {
-  const { login, deviceID } = useApp();
+  const { login } = useApp();
   const searchParams = useSearchParams();
   const router = useRouter();
   const mobile = searchParams.get('mobile');
