@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'app-version': '1',
+        'X-Device-MAC': deviceMAC,
       },
       body: JSON.stringify({
         deviceID: deviceMAC,

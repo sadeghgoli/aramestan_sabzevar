@@ -16,12 +16,26 @@ function VerifyCodeContent() {
   const [activeInputIndex, setActiveInputIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(2 * 60); // 2 minutes in seconds
+  const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     // Focus on the third input (index 2) when component mounts since first two are pre-filled
     setActiveInputIndex(0);
   }, []);
+
+  // Countdown timer for resend code
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setCanResend(true);
+    }
+  }, [countdown]);
 
   const handleInputClick = (index: number) => {
     setActiveInputIndex(index);
@@ -76,6 +90,47 @@ function VerifyCodeContent() {
   };
 
   const isFormValid = otpCode.every(digit => digit !== '') && otpCode.length === 5;
+
+  const handleResendCode = async () => {
+    if (!mobile || !canResend) return;
+    
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // Get deviceID from localStorage
+      const deviceID = localStorage.getItem('deviceID') || '';
+      
+      // Call login proxy API to send new code
+      const response = await fetch('/api/auth/login/proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Device-MAC': deviceID,
+        },
+        body: JSON.stringify({ mobile }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'خطا در ارسال کد جدید');
+      }
+      
+      // Reset countdown and disable resend button
+      setCountdown(2 * 60); // 2 minutes in seconds
+      setCanResend(false);
+      
+      // Clear OTP input
+      setOtpCode([...Array(5).fill('')]);
+      setActiveInputIndex(0);
+      
+    } catch (error: any) {
+      setError(error.message || 'خطا در ارسال کد جدید');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!isFormValid) return;
@@ -154,11 +209,13 @@ function VerifyCodeContent() {
         </div>
 
         <div className="w-full my-24  relative bg-white rounded-md p-12">
-          <h2 className="text-3xl font-bold  mb-4 text-[#093785]">
-            یک کد 5 رقمی به شماره موبایل{' '}
-            <span className="font-bold">{mobile || 'شماره شما'}</span>{' '}
-            ارسال شد، لطفا آن‌را در فیلد زیر وارد نمایید:
-          </h2>
+           <h2 className="text-3xl font-bold  mb-4 text-[#093785]">
+             یک کد 5 رقمی به شماره موبایل{' '}
+             <span className="font-bold">{mobile || 'شماره شما'}</span>{' '}
+             ارسال شد، لطفا آن‌را در فیلد زیر وارد نمایید:
+           </h2>
+           
+       
           
           {/* OTP Code Input Fields */}
           <div className="flex justify-center gap-1 mb-8" dir={'ltr'}>
@@ -193,14 +250,30 @@ function VerifyCodeContent() {
              >
                {isLoading ? 'در حال تایید...' : 'تایید'}
             </ImageButton>
-             <ImageButton
-                type="warning"
-                className="h-24 text-3xl w-full font-semibold z-[10]"
-                showArrow={true}
-                arrowSrc="/images/flash-left.png"
-             >
-             ورود ناشناس
-            </ImageButton>
+           
+              <ImageButton
+                 type="warning"
+                 className="h-24 text-3xl w-full font-semibold z-[10]"
+                 showArrow={true}
+                 arrowSrc="/images/flash-left.png"
+              >
+              ورود ناشناس
+             </ImageButton>
+
+                {canResend ? (
+                <div
+                  className="h-24 text-2xl w-full font-semibold z-[10] flex items-center justify-center cursor-pointer transition-colors"
+                  onClick={handleResendCode}
+                >
+                  ارسال مجدد کد
+                </div>
+              ) : (
+                <div
+                  className="h-24 text-2xl w-full font-semibold z-[10] rounded-lg flex items-center justify-center"
+                >
+                  {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')} تا ارسال مجدد
+                </div>
+              )}
          </div>
           
           <Image

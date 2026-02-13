@@ -76,6 +76,15 @@ class ApiClient {
       // Handle different response formats
       const responseData = response.data;
       
+      // Handle empty response
+      if (!responseData || (typeof responseData === 'object' && Object.keys(responseData).length === 0)) {
+        return {
+          success: true,
+          data: undefined,
+          error: undefined
+        };
+      }
+      
       // If response has our proxy format
       if (responseData.hasOwnProperty('success')) {
         return {
@@ -100,6 +109,18 @@ class ApiClient {
         data: responseData,
       };
     } catch (error: any) {
+      console.error('API Client Error:', error);
+      
+      // Handle network errors
+      if (!error.response) {
+        return {
+          success: false,
+          error: error.message || 'Network error',
+          data: undefined,
+        };
+      }
+      
+      // Handle server errors with response
       return {
         success: false,
         error: error.response?.data?.message || error.response?.data?.error || error.message || 'Unknown error',

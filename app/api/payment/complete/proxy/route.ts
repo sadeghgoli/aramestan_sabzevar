@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'app-version': '1',
+        'X-Device-MAC': deviceMAC,
       },
       body: JSON.stringify({
         userID,
@@ -34,7 +35,32 @@ export async function POST(request: NextRequest) {
       })
     });
 
-    const data = await response.json();
+    // Check if response is OK
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API error response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+
+    const responseText = await response.text();
+    
+    // Handle empty response
+    if (!responseText.trim()) {
+      return NextResponse.json({
+        success: true,
+        data: null,
+        message: 'Payment completed successfully'
+      });
+    }
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('Failed to parse JSON response:', parseError);
+      console.error('Response text:', responseText);
+      throw new Error('Invalid JSON response from server');
+    }
     console.log('Payment Complete API Response:', data);
 
     // Return response from external API

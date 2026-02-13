@@ -17,7 +17,7 @@ interface PaymentModalProps {
 }
 
 export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: PaymentModalProps) {
-  const { user, deviceID, basket, clearBasket, saveBasket, getTotalAmount } = useApp();
+  const { user, deviceID, basket, clearBasket, saveBasket, getTotalAmount, isBasketReserved, getBasketReservationTimeLeft } = useApp();
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
@@ -28,6 +28,7 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
   const [formattedAmount, setFormattedAmount] = useState('0 تومان');
   const [error, setError] = useState<string | null>(null);
   const [qrCodeData, setQrCodeData] = useState<string | null>(null);
+  const [basketCountdown, setBasketCountdown] = useState(0);
 
   // Calculate total amount when modal opens or basket changes
   useEffect(() => {
@@ -57,18 +58,25 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
     }
   }, [isOpen, basket, getTotalAmount]);
 
-  const openCardPayment = () => {
-    setIsCardModalOpen(true);
-  };
+  // Generate QR code when modal opens
+  useEffect(() => {
+    if (isOpen && user && totalAmount > 0 && !error && !qrCodeData) {
+      generateQRCode();
+    }
+  }, [isOpen, user, totalAmount, error, qrCodeData]);
 
-  const openQRPayment = async () => {
+  const generateQRCode = async () => {
     if (!user || totalAmount <= 0) return;
     
     try {
       setError(null);
+      setIsProcessing(true);
       
       // Save basket to server first using context function
       await saveBasket();
+
+      // Wait a moment for basket to be saved
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Get payment basket info
       const paymentResponse = await paymentService.getBasket({
@@ -87,13 +95,49 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
 
       if (qrResponse.success && qrResponse.data?.qrCode) {
         setQrCodeData(qrResponse.data.qrCode);
-        setIsQRModalOpen(true);
       } else {
         throw new Error('Failed to generate QR code');
       }
     } catch (error: any) {
       console.error('QR generation failed:', error);
       setError('خطا در تولید کد QR: ' + error.message);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Update basket countdown
+  useEffect(() => {
+    if (isOpen && isBasketReserved()) {
+      const updateCountdown = () => {
+        const timeLeft = getBasketReservationTimeLeft();
+        setBasketCountdown(timeLeft);
+        
+        if (timeLeft <= 0) {
+          // Basket reservation expired
+          setError('زمان رزرو سبد خرید به پایان رسید. لطفاً سبد خرید خود را به‌روزرسانی کنید.');
+        }
+      };
+      
+      // Update immediately
+      updateCountdown();
+      
+      // Update every second
+      const interval = setInterval(updateCountdown, 1000);
+      
+      return () => clearInterval(interval);
+    } else {
+      setBasketCountdown(0);
+    }
+  }, [isOpen, isBasketReserved, getBasketReservationTimeLeft]);
+
+  const openCardPayment = () => {
+    setIsCardModalOpen(true);
+  };
+
+  const openQRPayment = () => {
+    if (qrCodeData) {
+      setIsQRModalOpen(true);
     }
   };
 
@@ -125,6 +169,9 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
 
       // Save basket to server first using context function
       await saveBasket();
+
+      // Wait a moment for basket to be saved
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Get payment basket info
       const paymentResponse = await paymentService.getBasket({
@@ -187,18 +234,25 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
     >
       <div className="w-full">
        
-        <div 
-           onClick={() => setIsPaymentResultModalOpen(true)}
-        
-        className="w-full flex justify-between h-32 items-center px-8 mt-3"  style={{backgroundImage: `url(${'/images/payment.png'})`,backgroundSize:'cover',backgroundRepeat:'no-repeat'}}>
+         <div 
+            onClick={() => setIsPaymentResultModalOpen(true)}
+         
+         className="w-full flex justify-between h-32 items-center px-8 mt-3"  style={{backgroundImage: `url(${'/images/payment.png'})`,backgroundSize:'cover',backgroundRepeat:'no-repeat'}}>
               <span className='text-[#093785] text-2xl'>مبلغ قابل پرداخت :</span>
-              <span className='text-[#093785] text-2xl'>
-                {isLoadingTotal ? (
-                  <span className="animate-pulse">در حال محاسبه...</span>
-                ) : (
-                  formattedAmount
+              <div className='flex flex-col items-end'>
+                <span className='text-[#093785] text-2xl'>
+                  {isLoadingTotal ? (
+                    <span className="animate-pulse">در حال محاسبه...</span>
+                  ) : (
+                    formattedAmount
+                  )}
+                </span>
+                {basketCountdown > 0 && (
+                  <span className='text-red-500 text-sm'>
+                    {Math.floor(basketCountdown / 60)}:{(basketCountdown % 60).toString().padStart(2, '0')} تا انقضای سبد خرید
+                  </span>
                 )}
-              </span>
+              </div>
           </div>
 
           {/* Error Display */}
@@ -215,10 +269,10 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
         <div className="flex gap-2 my-5 px-2">
           <div
             className={`relative w-full cursor-pointer transition-opacity ${
-              isProcessing || isLoadingTotal || totalAmount <= 0 || error ? 'opacity-50 pointer-events-none' : ''
+              isProcessing || isLoadingTotal || totalAmount <= 0 || error || (basketCountdown <= 0 && isBasketReserved()) ? 'opacity-50 pointer-events-none' : ''
             }`}
             onClick={() => {
-              if (!isProcessing && !isLoadingTotal && totalAmount > 0 && !error) {
+              if (!isProcessing && !isLoadingTotal && totalAmount > 0 && !error && (basketCountdown > 0 || !isBasketReserved())) {
                 setSelectedPayment('card');
                 setIsCardModalOpen(true);
               }
@@ -240,37 +294,42 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
 
             </div>
           </div>
-            <div
-               className={`relative w-full cursor-pointer transition-opacity ${
-                 isProcessing || isLoadingTotal || totalAmount <= 0 || error ? 'opacity-50 pointer-events-none' : ''
-               }`}
-               onClick={() => {
-                 if (!isProcessing && !isLoadingTotal && totalAmount > 0 && !error) {
-                   setSelectedPayment('qr');
-                   openQRPayment();
-                 }
-               }}
-            >
-            <img src="/images/pos.png" alt="" className='w-full' />
-              <div className="absolute top-[15%] w-full flex justify-center">
-            {qrCodeData ? (
-              <img src={qrCodeData} alt="QR Code" className='w-75' />
-            ) : (
-              <img src="/images/qrcode.png" alt="" className='w-75' />
-            )}
-            </div>
-             <div className='px-8 absolute top-[55%] w-full flex justify-center'>
-            <p className='font-bold text-[#093785] text-center text-3xl'>
-                         پرداخت از طریق
-            اسکن QR Code با تلفن همراه
-                        </p>
-                        
-            </div>
-              <div className="absolute top-[79%] w-full flex justify-center">
-            <img src="/images/help.png" alt="" className='w-[35%]' />
- 
-            </div>
-          </div>
+             <div
+                className={`relative w-full cursor-pointer transition-opacity ${
+                  isProcessing || isLoadingTotal || totalAmount <= 0 || error || (basketCountdown <= 0 && isBasketReserved()) ? 'opacity-50 pointer-events-none' : ''
+                }`}
+                onClick={() => {
+                  if (!isProcessing && !isLoadingTotal && totalAmount > 0 && !error && (basketCountdown > 0 || !isBasketReserved())) {
+                    setSelectedPayment('qr');
+                    openQRPayment();
+                  }
+                }}
+             >
+             <img src="/images/pos.png" alt="" className='w-full' />
+             <div className="absolute top-[15%] w-full flex justify-center">
+             {isProcessing ? (
+               <div className="w-75 h-75 flex items-center justify-center">
+                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#093785]"></div>
+                 <p className="mt-4 text-xl text-[#093785]">در حال ساخت QR Code...</p>
+               </div>
+             ) : qrCodeData ? (
+               <img src={qrCodeData} alt="QR Code" className='w-75' />
+             ) : (
+               <img src="/images/qrcode.png" alt="" className='w-75' />
+             )}
+             </div>
+              <div className='px-8 absolute top-[55%] w-full flex justify-center'>
+             <p className='font-bold text-[#093785] text-center text-3xl'>
+                          پرداخت از طریق
+             اسکن QR Code با تلفن همراه
+                         </p>
+                         
+             </div>
+               <div className="absolute top-[79%] w-full flex justify-center">
+             <img src="/images/help.png" alt="" className='w-[35%]' />
+  
+             </div>
+           </div>
         </div>
       </div>
       <CardPaymentModal isOpen={isCardModalOpen} onClose={closeCardPayment} amount={formattedAmount} onPaymentComplete={() => {

@@ -10,7 +10,98 @@
     {
       "name": "api",
       "item": [
-        
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "login",
+              "item": [
+                {
+                  "name": "/api/admin/login",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "app-version",
+                        "value": "string"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"ip\": \"string\",\n  \"password\": \"string\",\n  \"userName\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/admin/login",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "login"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"ip\": \"string\",\n  \"password\": \"string\",\n  \"userName\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/admin/login",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "admin",
+                            "login"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "basket",
           "item": [
@@ -33,7 +124,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"deviceID\": \"befd9f09-0ecf-6ec8-bb97-5450161ce2ee\",\n  \"userID\": \"e1358343-bd04-9210-1aa9-ece7c5b2b775\",\n  \"items\": [\n    {\n      \"count\": 3775,\n      \"productID\": \"0d9bdf16-57bb-984f-f7cf-8137a6821cce\"\n    },\n    {\n      \"count\": 6133,\n      \"productID\": \"44b848aa-bf93-0021-4f9c-09be889ae865\"\n    }\n  ]\n}",
+                      "raw": "{\n  \"userID\": \"e1358343-bd04-9210-1aa9-ece7c5b2b775\",\n  \"items\": [\n    {\n      \"count\": 3775,\n      \"productID\": \"0d9bdf16-57bb-984f-f7cf-8137a6821cce\"\n    },\n    {\n      \"count\": 6133,\n      \"productID\": \"44b848aa-bf93-0021-4f9c-09be889ae865\"\n    }\n  ]\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -183,6 +274,47 @@
                       "header": [],
                       "cookie": [],
                       "body": ""
+                    },
+                    {
+                      "name": "/api/basket/read",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "app-version",
+                            "value": "string"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userID\": \"a1b0dd7d-cfd8-421f-df7b-c24e61f20ce2\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/basket/read",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "basket",
+                            "read"
+                          ]
+                        }
+                      },
+                      "_postman_previewlanguage": null,
+                      "header": null,
+                      "cookie": [],
+                      "body": null
                     }
                   ]
                 }
@@ -563,7 +695,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"deviceID\": \"4e72190e-e1be-d5d0-282f-ec9929241322\",\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
+                          "raw": "{\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -652,7 +784,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"deviceID\": \"4e72190e-e1be-d5d0-282f-ec9929241322\",\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
+                          "raw": "{\n  \"paymentID\": \"a3f1e2eb-cbab-caf9-4dfc-6a14d389747d\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -1306,7 +1438,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"deviceID\": \"507f7251-c4b1-8c8a-0532-9f85c87fbbf2\"\n}",
+                      "raw": "{}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1393,7 +1525,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"deviceID\": \"61f87df5-9ba6-5108-cdc4-e9269aa867ba\",\n  \"mobile\": \"string\"\n}",
+                      "raw": "{\n    \"mobile\": \"09308303888\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1480,7 +1612,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"deviceID\": \"ff6ceb58-0767-9184-6079-c47237fb132f\",\n  \"mobile\": \"string\",\n  \"otpCode\": 9497\n}",
+                      "raw": "{\n  \"mobile\": \"09308303888\",\n  \"otpCode\": 72162\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1564,6 +1696,10 @@
           "pm.request.headers.upsert({\r",
           "    key: \"app-version\",\r",
           "    value: \"1\"\r",
+          "});\r",
+          "pm.request.headers.upsert({\r",
+          "    key: \"X-Device-MAC\",\r",
+          "    value: \"5C-9A-D8-58-81-95\"\r",
           "});"
         ]
       }

@@ -182,4 +182,7 @@ export interface AppContextType {
   clearBasket: () => Promise<void>;
   saveBasket: () => Promise<void>;
   getTotalAmount: () => number;
+  reserveBasket: () => Date;
+  isBasketReserved: () => boolean;
+  getBasketReservationTimeLeft: () => number;
 }

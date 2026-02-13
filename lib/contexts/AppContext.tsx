@@ -22,7 +22,8 @@ type AppAction =
   | { type: 'UPDATE_BASKET_ITEM'; payload: { productID: string; count: number } }
   | { type: 'CLEAR_BASKET' }
   | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null };
+  | { type: 'SET_ERROR'; payload: string | null }
+  | { type: 'SET_BASKET_RESERVED_UNTIL'; payload: Date | null };
 
 // State interface
 interface AppState {
@@ -32,6 +33,7 @@ interface AppState {
   basket: BasketItemWithProduct[];
   isLoading: boolean;
   error: string | null;
+  basketReservedUntil: Date | null;
 }
 
 // Initial state
@@ -42,6 +44,7 @@ const initialState: AppState = {
   basket: [],
   isLoading: false,
   error: null,
+  basketReservedUntil: null,
 };
 
 // Reducer
@@ -123,6 +126,9 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case 'SET_ERROR':
       return { ...state, error: action.payload };
 
+    case 'SET_BASKET_RESERVED_UNTIL':
+      return { ...state, basketReservedUntil: action.payload };
+
     default:
       return state;
   }
@@ -184,11 +190,16 @@ export function AppProvider({ children }: AppProviderProps) {
         throw new Error(verifyResponse.error || 'Verification failed');
       }
 
-      if (verifyResponse.data && verifyResponse.data.user) {
+      if (verifyResponse.data && 'user' in verifyResponse.data && verifyResponse.data.user) {
+        const userData = verifyResponse.data.user as {
+          id: string;
+          mobile: string;
+          name?: string;
+        };
         const user: User = {
-          id: verifyResponse.data.user.id,
-          mobile: verifyResponse.data.user.mobile,
-          name: verifyResponse.data.user.name
+          id: userData.id,
+          mobile: userData.mobile,
+          name: userData.name || ''
         };
         dispatch({ type: 'SET_USER', payload: user });
 
@@ -269,6 +280,9 @@ export function AppProvider({ children }: AppProviderProps) {
 
       if (!response.success) {
         console.error('Failed to save basket:', response.error);
+      } else {
+        // Reserve basket for 15 minutes after successful save
+        reserveBasket();
       }
     } catch (error) {
       console.error('Error saving basket:', error);
@@ -302,6 +316,26 @@ export function AppProvider({ children }: AppProviderProps) {
 
   const getTotalAmount = () => {
     return state.basket.reduce((total, item) => total + item.totalPrice, 0);
+  };
+
+  const reserveBasket = () => {
+    // Reserve basket for 15 minutes
+    const reservedUntil = new Date();
+    reservedUntil.setMinutes(reservedUntil.getMinutes() + 15);
+    dispatch({ type: 'SET_BASKET_RESERVED_UNTIL', payload: reservedUntil });
+    return reservedUntil;
+  };
+
+  const isBasketReserved = () => {
+    if (!state.basketReservedUntil) return false;
+    return new Date() < state.basketReservedUntil;
+  };
+
+  const getBasketReservationTimeLeft = () => {
+    if (!state.basketReservedUntil) return 0;
+    const now = new Date();
+    const timeLeft = Math.max(0, state.basketReservedUntil.getTime() - now.getTime());
+    return Math.floor(timeLeft / 1000); // Return in seconds
   };
 
   // Load user from localStorage on mount
@@ -354,6 +388,9 @@ export function AppProvider({ children }: AppProviderProps) {
     clearBasket,
     saveBasket,
     getTotalAmount,
+    reserveBasket,
+    isBasketReserved,
+    getBasketReservationTimeLeft,
   };
 
   return (

@@ -29,8 +29,8 @@ export class AuthService {
   /**
    * Verify OTP code
    */
-  static async verify(request: AuthVerifyRequest): Promise<ApiResponse<VerifyProxyResponse['data']>> {
-    return apiClient.post<VerifyProxyResponse['data']>('/api/auth/verify/proxy', request);
+  static async verify(request: AuthVerifyRequest): Promise<ApiResponse<VerifyProxyResponse>> {
+    return apiClient.post<VerifyProxyResponse>('/api/auth/verify/proxy', request);
   }
 }
 

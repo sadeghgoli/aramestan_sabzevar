@@ -15,10 +15,10 @@ interface CardPaymentModalProps {
 }
 
 export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, amount }: CardPaymentModalProps) {
-  const { user, deviceID } = useApp();
+  const { user, deviceID, saveBasket } = useApp();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState(29);
+  const [countdown, setCountdown] = useState(2 * 60); // 2 minutes in seconds
   const [paymentID, setPaymentID] = useState<string | null>(null);
 
   // Reset state when modal opens
@@ -26,7 +26,7 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
     if (isOpen) {
       setError(null);
       setIsProcessing(false);
-      setCountdown(29);
+      setCountdown(2 * 60); // 2 minutes in seconds
       setPaymentID(null);
       generatePOS();
     }
@@ -53,7 +53,13 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
       setIsProcessing(true);
       setError(null);
 
-      // First get payment basket info
+      // First save basket to ensure it's available for payment
+      await saveBasket();
+
+      // Wait a moment for basket to be saved
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Then get payment basket info
       const basketResponse = await paymentService.getBasket({
         userID: user.id
       });
@@ -78,7 +84,7 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
 
       if (posResponse.success) {
         setPaymentID(basketResponse.data.paymentID);
-        setCountdown(29);
+        setCountdown(2 * 60); // 2 minutes in seconds
       } else {
         throw new Error(posResponse.error || 'خطا در اتصال به کارتخوان');
       }
@@ -179,7 +185,7 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
               <div>
                 <img src="/images/clock.png" width={32} height={32} alt="" />
               </div>
-              {countdown} ثانیه تا انقضا
+              {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')} دقیقه تا انقضا
             </div>
           </div>
         )}

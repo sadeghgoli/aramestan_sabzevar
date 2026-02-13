@@ -20,7 +20,7 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState(29);
+  const [countdown, setCountdown] = useState(15 * 60); // 15 minutes in seconds
   const [paymentID, setPaymentID] = useState<string | null>(null);
 
   // Reset state when modal opens
@@ -29,7 +29,7 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
       setQrCode(qrCodeData || null);
       setError(null);
       setIsGenerating(false);
-      setCountdown(29);
+      setCountdown(15 * 60); // 15 minutes in seconds
       setPaymentID(null);
     }
   }, [isOpen, qrCodeData]);
@@ -106,13 +106,13 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
             setQrCode('/images/qr-code-big.png');
           }
           setPaymentID(basketResponse.data.paymentID);
-          setCountdown(29);
+          setCountdown(15 * 60); // 15 minutes in seconds
         } else {
           // No QR code or barcode in response, but request was successful
           // Use a placeholder or generate a simple QR code
           setQrCode('/images/qr-code-big.png');
           setPaymentID(basketResponse.data.paymentID);
-          setCountdown(29);
+          setCountdown(15 * 60); // 15 minutes in seconds
         }
       } else {
         throw new Error(qrResponse.error || 'خطا در تولید کد QR');
@@ -214,7 +214,7 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
                  <div>
                    <img src="/images/clock.png" width={32} height={32} alt="" />
                  </div>
-                 {countdown} ثانیه تا انقضا
+                  {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')} دقیقه تا انقضا
                </div>
              </div>
            )}

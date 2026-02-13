@@ -31,17 +31,48 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'app-version': '1',
+        'X-Device-MAC': deviceMAC,
       },
       body: JSON.stringify({
         deviceID: deviceMAC
       })
     });
 
-    const data = await response.json();
+    // Check if response is OK
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API error response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+
+    const responseText = await response.text();
+    
+    // Handle empty response
+    if (!responseText.trim()) {
+      // Return success for empty response (API might not return content for unknown request)
+      return NextResponse.json({
+        success: true,
+        data: null,
+        message: 'Unknown user created successfully'
+      });
+    }
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('Failed to parse JSON response:', parseError);
+      console.error('Response text:', responseText);
+      throw new Error('Invalid JSON response from server');
+    }
 
     // Return response from external API
-    const unknownResponse = NextResponse.json(data, { 
-      status: response.status 
+    const unknownResponse = NextResponse.json({
+      success: data.isOK !== undefined ? data.isOK : true,
+      data: data.data || null,
+      error: data.stateDescription || null
+    }, {
+      status: response.status
     });
     
     // Set deviceMAC cookie

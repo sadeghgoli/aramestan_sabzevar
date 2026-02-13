@@ -83,12 +83,17 @@ export async function POST(request: NextRequest) {
       });
       
       console.log('Request body being sent:', requestBody);
+      console.log('Request headers:', {
+        'Content-Type': 'application/json',
+        'app-version': '1',
+      });
       
       response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/auth/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'app-version': '1',
+          'X-Device-MAC': deviceMAC,
         },
         body: requestBody
       });
@@ -100,13 +105,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if response is OK
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API error response:', errorText);
+      return NextResponse.json(
+        { success: false, error: `HTTP error! status: ${response.status}, message: ${errorText}` },
+        { status: 500 }
+      );
+    }
+
+    const responseText = await response.text();
+    
+    // Handle empty response
+    if (!responseText.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'Empty response from server' },
+        { status: 500 }
+      );
+    }
+
     let data;
     try {
-      data = await response.json();
+      data = JSON.parse(responseText);
     } catch (jsonError) {
       console.error('JSON parse error:', jsonError);
+      console.error('Response text:', responseText);
       return NextResponse.json(
-        { success: false, error: 'Invalid response from external API' },
+        { success: false, error: 'Invalid JSON response from server' },
         { status: 500 }
       );
     }
@@ -164,8 +190,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: false,
         error: data.stateDescription || 'Verification failed'
-      }, { 
-        status: 400 
+      }, {
+        status: 200 // Keep status 200 to ensure proper error handling
       });
     }
   } catch (error) {
