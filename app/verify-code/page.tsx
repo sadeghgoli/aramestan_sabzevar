@@ -268,7 +268,7 @@ function VerifyCodeContent() {
                   ارسال مجدد کد
                 </div>
               ) : (
-                <div
+                <div 
                   className="h-24 text-2xl w-full font-semibold z-[10] rounded-lg flex items-center justify-center"
                 >
                   {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')} تا ارسال مجدد
