@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ApiResponse } from './types';
 import { env } from '../config/env';
+import { isEdgeBrowser, getCacheControlHeaders } from '../utils/browser';
 
 class ApiClient {
   private client: AxiosInstance;
@@ -24,6 +25,10 @@ class ApiClient {
       (config) => {
         // Add X-Device-MAC header to all requests
         config.headers['X-Device-MAC'] = '5C-9A-D8-58-81-95';
+        
+        // Add browser-specific headers
+        const cacheHeaders = getCacheControlHeaders();
+        Object.assign(config.headers, cacheHeaders);
         
         // You can add auth token here if needed
         // const token = localStorage.getItem('authToken');

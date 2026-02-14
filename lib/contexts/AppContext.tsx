@@ -11,6 +11,7 @@ import {
   VerifyProxyResponse
 } from '../api';
 import { authService, productsService, basketService } from '../api';
+import { safeLocalStorageSetItem, safeLocalStorageGetItem, safeLocalStorageRemoveItem } from '../utils/browser';
 
 // Action types
 type AppAction =
@@ -149,7 +150,10 @@ export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
     // Use fixed deviceID as requested
     const deviceID = '3FA85F64-5717-4562-B3FC-2C963F66AFA6';
-    localStorage.setItem('deviceID', deviceID);
+    
+    // Safely store deviceID in localStorage
+    safeLocalStorageSetItem('deviceID', deviceID);
+    
     console.log('Using fixed deviceID:', deviceID);
     dispatch({ type: 'SET_DEVICE_ID', payload: deviceID });
 
@@ -204,7 +208,7 @@ export function AppProvider({ children }: AppProviderProps) {
         dispatch({ type: 'SET_USER', payload: user });
 
         // Store user in localStorage
-        localStorage.setItem('user', JSON.stringify(user));
+        safeLocalStorageSetItem('user', JSON.stringify(user));
 
         // Load user's basket
         await loadBasket(user.id);
@@ -259,7 +263,7 @@ export function AppProvider({ children }: AppProviderProps) {
     
     dispatch({ type: 'SET_USER', payload: null });
     dispatch({ type: 'CLEAR_BASKET' });
-    localStorage.removeItem('user');
+    safeLocalStorageRemoveItem('user');
   };
 
   // Save basket to backend
@@ -361,14 +365,15 @@ export function AppProvider({ children }: AppProviderProps) {
       }
       
       // Fallback to localStorage if API check fails
-      const storedUser = localStorage.getItem('user');
+      const storedUser = safeLocalStorageGetItem('user');
+      
       if (storedUser) {
         try {
           const user = JSON.parse(storedUser);
           dispatch({ type: 'SET_USER', payload: user });
           loadBasket(user.id);
         } catch (error) {
-          localStorage.removeItem('user');
+          safeLocalStorageRemoveItem('user');
         }
       }
     };

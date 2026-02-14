@@ -147,7 +147,12 @@ function VerifyCodeContent() {
       await login(mobile, code);
 
       // Navigate to dashboard on success
-      router.push('/dashboard');
+      // Force a hard redirect for Edge to avoid caching issues
+      if (window.navigator.userAgent.indexOf('Edg') > -1) {
+        window.location.href = '/dashboard';
+      } else {
+        router.push('/dashboard');
+      }
     } catch (error: any) {
       setError(error.message || 'خطا در تایید کد');
     } finally {
@@ -252,13 +257,21 @@ function VerifyCodeContent() {
             </ImageButton>
            
               <ImageButton
-                 type="warning"
-                 className="h-24 text-3xl w-full font-semibold z-[10]"
-                 showArrow={true}
-                 arrowSrc="/images/flash-left.png"
-              >
-              ورود ناشناس
-             </ImageButton>
+                  type="warning"
+                  className="h-24 text-3xl w-full font-semibold z-[10]"
+                  showArrow={true}
+                  arrowSrc="/images/flash-left.png"
+                  onRedirect={() => {
+                    // Force a hard redirect for Edge to avoid caching issues
+                    if (window.navigator.userAgent.indexOf('Edg') > -1) {
+                      window.location.href = '/dashboard/without-login';
+                    } else {
+                      router.push('/dashboard/without-login');
+                    }
+                  }}
+               >
+               ورود ناشناس
+              </ImageButton>
 
                 {canResend ? (
                 <div

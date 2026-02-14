@@ -51,6 +51,11 @@ export function middleware(request: NextRequest) {
     requestHeaders.set('x-user-mobile', payload.mobile);
     requestHeaders.set('X-Device-MAC', '5C-9A-D8-58-81-95');
     
+    // Add Edge-specific headers to prevent caching issues
+    requestHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    requestHeaders.set('Pragma', 'no-cache');
+    requestHeaders.set('Expires', '0');
+    
     return NextResponse.next({
       request: {
         headers: requestHeaders,

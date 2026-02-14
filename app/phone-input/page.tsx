@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useApp } from '../../lib/contexts/AppContext';
 import { authService } from '../../lib/api';
 import { v4 as uuidv4 } from 'uuid';
+import { safeLocalStorageSetItem } from '../../lib/utils/browser';
 
 export default function PhoneInput() {
   const { login } = useApp();
@@ -94,7 +95,10 @@ export default function PhoneInput() {
 
       // Use fixed deviceMAC as requested
       const currentDeviceMAC = '5C-9A-D8-58-81-95';
-      localStorage.setItem('deviceMAC', currentDeviceMAC);
+      
+      // Safely store deviceMAC in localStorage
+      safeLocalStorageSetItem('deviceMAC', currentDeviceMAC);
+      
       console.log('Using fixed deviceMAC:', currentDeviceMAC);
 
       // Send OTP via authService
@@ -109,6 +113,7 @@ export default function PhoneInput() {
       // Navigate to verify-code page with mobile number
       router.push(`/verify-code?mobile=${mobileNumber}`);
     } catch (error: any) {
+      console.error('Submit error:', error);
       setError(error.message || 'خطا در ارسال کد');
     } finally {
       setIsLoading(false);
@@ -122,7 +127,10 @@ export default function PhoneInput() {
 
       // Use fixed deviceMAC as requested
       const currentDeviceMAC = '5C-9A-D8-58-81-95';
-      localStorage.setItem('deviceMAC', currentDeviceMAC);
+      
+      // Safely store deviceMAC in localStorage
+      safeLocalStorageSetItem('deviceMAC', currentDeviceMAC);
+      
       console.log('Using fixed deviceMAC:', currentDeviceMAC);
 
       // Anonymous login via authService
@@ -135,8 +143,14 @@ export default function PhoneInput() {
       }
 
       // Navigate to dashboard for anonymous user
-      router.push('/dashboard/without-login');
+      // Force a hard redirect for Edge to avoid caching issues
+      if (window.navigator.userAgent.indexOf('Edg') > -1) {
+        window.location.href = '/dashboard/without-login';
+      } else {
+        router.push('/dashboard/without-login');
+      }
     } catch (error: any) {
+      console.error('Anonymous login error:', error);
       setError(error.message || 'خطا در ورود ناشناس');
     } finally {
       setIsLoading(false);

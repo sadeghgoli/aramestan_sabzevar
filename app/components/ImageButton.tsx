@@ -46,23 +46,31 @@ export default function ImageButton({
   arrowSrc = '',
   onRedirect
 }: ImageButtonProps) {
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled) return;
     
-    if (onRedirect) {
-      onRedirect();
-    } else if (href) {
-      if (target === '_blank') {
-        window.open(href, target);
-      } else {
-        // Check if it's an internal link (starts with /)
-        if (href.startsWith('/')) {
-          window.location.pathname = href;
+    // Prevent default behavior for Edge
+    e.preventDefault();
+    
+    // Use setTimeout to ensure the event is processed correctly in Edge
+    setTimeout(() => {
+      if (onRedirect) {
+        onRedirect();
+      } else if (href) {
+        if (target === '_blank') {
+          window.open(href, target);
         } else {
-          window.location.href = href;
+          // Check if it's an internal link (starts with /)
+          if (href.startsWith('/')) {
+            // Force a hard redirect for Edge to avoid caching issues
+            window.location.href = href;
+            // Alternative for Edge: window.location.replace(href);
+          } else {
+            window.location.href = href;
+          }
         }
       }
-    }
+    }, 100); // Increased timeout for Edge
   };
 
   const bgImage = backgroundImage || buttonBackgrounds[type];
@@ -82,7 +90,7 @@ export default function ImageButton({
         backgroundRepeat: 'no-repeat',
         color: textColor,
       }}
-      onClick={handleClick}
+      onClick={(e) => handleClick(e)}
       disabled={disabled}
     >
         {children}

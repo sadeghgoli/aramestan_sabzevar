@@ -9,6 +9,43 @@ function generateUUID(): string {
   });
 }
 
+// Simple token creation using base64 encoding (not as secure as JWT but simpler)
+function createSimpleToken(payload: any, secret: string): string {
+  const header = {
+    alg: 'HS256',
+    typ: 'JWT'
+  };
+  
+  const now = Math.floor(Date.now() / 1000);
+  const tokenPayload = {
+    ...payload,
+    iat: now,
+    exp: now + (24 * 60 * 60) // 24 hours
+  };
+  
+  // Use standard base64 encoding and replace URL-unsafe characters
+  const encodedHeader = Buffer.from(JSON.stringify(header))
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+    
+  const encodedPayload = Buffer.from(JSON.stringify(tokenPayload))
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+  
+  // Create a simple signature (not cryptographically secure, but for demo purposes)
+  const signature = Buffer.from(`${encodedHeader}.${encodedPayload}.${secret}`)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+  
+  return `${encodedHeader}.${encodedPayload}.${signature}`;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -32,6 +69,8 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
         'app-version': '1',
         'X-Device-MAC': deviceMAC,
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
       },
       body: JSON.stringify({
         deviceID: deviceMAC
@@ -75,6 +114,30 @@ export async function POST(request: NextRequest) {
       status: response.status
     });
     
+    // Get or generate user ID
+    const userID = (data.isOK && data.data && data.data.userID) ? data.data.userID : generateUUID();
+    
+    // Create JWT token for anonymous user
+    const token = createSimpleToken({
+      userId: userID,
+      mobile: 'anonymous',
+      deviceID: deviceMAC,
+      user: {
+        id: userID,
+        mobile: 'anonymous',
+        name: 'کاربر مهمان'
+      }
+    }, process.env.JWT_SECRET || 'your-secret-key-change-in-production');
+    
+    // Set auth token cookie
+    unknownResponse.cookies.set('auth-token', token, {
+      httpOnly: true,
+      secure: false, // Set to false for development, change to true in production
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60,
+      path: '/'
+    });
+    
     // Set deviceMAC cookie
     unknownResponse.cookies.set('device-mac', deviceMAC, {
       httpOnly: true,
@@ -84,16 +147,14 @@ export async function POST(request: NextRequest) {
       path: '/'
     });
     
-    // Set user ID cookie if response contains userID
-    if (data.isOK && data.data && data.data.userID) {
-      unknownResponse.cookies.set('user-id', data.data.userID, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60, // 24 hours
-        path: '/'
-      });
-    }
+    // Set user ID cookie
+    unknownResponse.cookies.set('user-id', userID, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60, // 24 hours
+      path: '/'
+    });
     
     return unknownResponse;
   } catch (error) {
