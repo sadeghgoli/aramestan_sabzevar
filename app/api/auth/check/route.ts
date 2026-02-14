@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     const userId = request.cookies.get('user-id')?.value;
     
     if (!userId) {
-      return NextResponse.json({ authenticated: false });
+      return NextResponse.json({ authenticated: '11false' });
     }
     
     // Return user ID from cookie
@@ -48,6 +48,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Auth check error:', error);
-    return NextResponse.json({ authenticated: false });
+    return NextResponse.json({ authenticated: 'false' });
   }
 }

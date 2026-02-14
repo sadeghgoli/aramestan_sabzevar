@@ -169,18 +169,18 @@ export async function POST(request: NextRequest) {
       // Set JWT token
       successResponse.cookies.set('auth-token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // موقتاً true را بردارید تا روی HTTP کار کند
         sameSite: 'lax',
-        maxAge: 24 * 60 * 60, // 24 hours
+        maxAge: 24 * 60 * 60,
         path: '/'
       });
       
       // Set user ID separately
       successResponse.cookies.set('user-id', userId, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // موقتاً true را بردارید تا روی HTTP کار کند
         sameSite: 'lax',
-        maxAge: 24 * 60 * 60, // 24 hours
+        maxAge: 24 * 60 * 60,
         path: '/'
       });
 
