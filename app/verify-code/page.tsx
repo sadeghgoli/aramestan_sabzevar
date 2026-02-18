@@ -98,15 +98,11 @@ function VerifyCodeContent() {
       setIsLoading(true);
       setError(null);
       
-      // Get deviceID from localStorage
-      const deviceID = localStorage.getItem('deviceID') || '';
-      
       // Call login proxy API to send new code
       const response = await fetch('/api/auth/login/proxy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Device-MAC': deviceID,
         },
         body: JSON.stringify({ mobile }),
       });

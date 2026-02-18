@@ -17,7 +17,7 @@ interface PaymentModalProps {
 }
 
 export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: PaymentModalProps) {
-  const { user, deviceID, basket, clearBasket, saveBasket, getTotalAmount, isBasketReserved, getBasketReservationTimeLeft } = useApp();
+  const { user, basket, clearBasket, saveBasket, getTotalAmount, isBasketReserved, getBasketReservationTimeLeft } = useApp();
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
@@ -89,7 +89,6 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
 
       // Generate QR code
       const qrResponse = await paymentService.generateBarcode({
-        deviceID,
         paymentID: paymentResponse.data?.paymentID || ''
       });
 
@@ -186,12 +185,10 @@ export default function PaymentModal({ isOpen, onClose, onPaymentComplete }: Pay
       let paymentMethodResponse;
       if (selectedPayment === 'card') {
         paymentMethodResponse = await paymentService.generatePOS({
-          deviceID,
           paymentID: paymentResponse.data?.paymentID || ''
         });
       } else if (selectedPayment === 'qr') {
         paymentMethodResponse = await paymentService.generateBarcode({
-          deviceID,
           paymentID: paymentResponse.data?.paymentID || ''
         });
       }

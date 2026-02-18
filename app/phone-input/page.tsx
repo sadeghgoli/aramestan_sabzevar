@@ -134,9 +134,7 @@ export default function PhoneInput() {
       console.log('Using fixed deviceMAC:', currentDeviceMAC);
 
       // Anonymous login via authService
-      const response = await authService.unknown({
-        deviceID: currentDeviceMAC
-      });
+      const response = await authService.unknown({});
 
       if (!response.success) {
         throw new Error(response.error || 'خطا در ورود ناشناس');

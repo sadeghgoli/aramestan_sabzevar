@@ -15,7 +15,7 @@ interface CardPaymentModalProps {
 }
 
 export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, amount }: CardPaymentModalProps) {
-  const { user, deviceID, saveBasket } = useApp();
+  const { user, saveBasket } = useApp();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(2 * 60); // 2 minutes in seconds
@@ -76,7 +76,6 @@ export default function CardPaymentModal({ isOpen, onClose, onPaymentComplete, a
 
       // Generate POS payment
       const posResponse = await paymentService.generatePOS({
-        deviceID,
         paymentID: basketResponse.data.paymentID
       });
 

@@ -277,7 +277,6 @@ export function AppProvider({ children }: AppProviderProps) {
       }));
 
       const response = await basketService.save({
-        deviceID: state.deviceID,
         userID: state.user.id,
         items: basketItems
       });
@@ -384,7 +383,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const contextValue: AppContextType = {
     user: state.user,
     basket: state.basket,
-    deviceID: state.deviceID,
+    deviceID: state.deviceID, // Keeping for backward compatibility but not used in API calls
     login,
     logout,
     addToBasket,

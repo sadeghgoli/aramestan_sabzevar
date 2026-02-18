@@ -106,7 +106,6 @@ export async function POST(request: NextRequest) {
     const token = createSimpleToken({
       userId: userID,
       mobile: 'anonymous',
-      deviceID: 'anonymous',
       user: {
         id: userID,
         mobile: 'anonymous',

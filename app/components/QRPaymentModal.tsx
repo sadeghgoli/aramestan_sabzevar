@@ -16,7 +16,7 @@ interface QRPaymentModalProps {
 }
 
 export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amount, qrCodeData }: QRPaymentModalProps) {
-  const { user, deviceID } = useApp();
+  const { user } = useApp();
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +56,6 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
       setError(null);
 
       // First get payment basket info
-      console.log('Sending basket request with:', { deviceID, userID: user.id });
       const basketResponse = await paymentService.getBasket({
         userID: user.id
       });
@@ -73,7 +72,6 @@ export default function QRPaymentModal({ isOpen, onClose, onPaymentComplete, amo
 
       // Generate barcode/QR code
       const qrResponse = await paymentService.generateBarcode({
-        deviceID,
         paymentID: basketResponse.data.paymentID
       });
 
