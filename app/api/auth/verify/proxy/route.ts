@@ -51,25 +51,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { mobile, otpCode } = body;
     
-    // Get device MAC from header
-    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
-    console.log('Using deviceMAC from header:', deviceMAC);
-
     // Debug logging
     console.log('Verify request body:', { mobile, otpCode, typeOfOtpCode: typeof otpCode });
     console.log('Request headers:', {
       'Content-Type': 'application/json',
       'app-version': '1',
-      'X-Device-MAC': deviceMAC
     });
     console.log('Request URL:', 'http://apikiosk.aramestan.sabzevar.ir/api/auth/verify');
-    console.log('Using deviceMAC:', deviceMAC);
 
     // Validate required fields
-    if (!deviceMAC || !mobile || !otpCode) {
-      console.log('Validation failed:', { deviceMAC: !!deviceMAC, mobile: !!mobile, otpCode: !!otpCode });
+    if (!mobile || !otpCode) {
+      console.log('Validation failed:', { mobile: !!mobile, otpCode: !!otpCode });
       return NextResponse.json(
-        { success: false, error: 'deviceMAC, mobile and otpCode are required' },
+        { success: false, error: 'mobile and otpCode are required' },
         { status: 400 }
       );
     }
@@ -93,7 +87,6 @@ export async function POST(request: NextRequest) {
         headers: {
           'Content-Type': 'application/json',
           'app-version': '1',
-          'X-Device-MAC': deviceMAC,
         },
         body: requestBody
       });
@@ -144,7 +137,7 @@ export async function POST(request: NextRequest) {
       const token = createSimpleToken({
         userId: data.data.userID,
         mobile: mobile,
-        deviceID: deviceMAC,
+        deviceID: 'anonymous',
         user: {
           id: data.data.userID,
           mobile: mobile

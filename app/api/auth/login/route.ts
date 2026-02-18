@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { deviceID, mobile } = body;
+    const { mobile } = body;
 
     // Validate required fields
-    if (!deviceID || !mobile) {
+    if (!mobile) {
       return NextResponse.json(
-        { success: false, error: 'deviceID and mobile are required' },
+        { success: false, error: 'mobile is required' },
         { status: 400 }
       );
     }

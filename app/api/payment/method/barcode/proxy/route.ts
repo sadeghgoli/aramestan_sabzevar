@@ -5,15 +5,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { paymentID } = body;
     
-    // Get device MAC from header
-    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
-    console.log('Using deviceMAC from header:', deviceMAC);
     console.log('Barcode proxy request body:', body);
 
     // Validate required fields
-    if (!deviceMAC || !paymentID) {
+    if (!paymentID) {
       return NextResponse.json(
-        { success: false, error: 'deviceMAC and paymentID are required' },
+        { success: false, error: 'paymentID is required' },
         { status: 400 }
       );
     }
@@ -24,10 +21,8 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'app-version': '1',
-        'X-Device-MAC': deviceMAC,
       },
       body: JSON.stringify({
-        deviceID: deviceMAC,
         paymentID
       })
     });

@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { deviceID, paymentID } = body;
+    const { paymentID } = body;
 
     // Validate required fields
-    if (!deviceID || !paymentID) {
+    if (!paymentID) {
       return NextResponse.json(
-        { success: false, error: 'deviceID and paymentID are required' },
+        { success: false, error: 'paymentID is required' },
         { status: 400 }
       );
     }

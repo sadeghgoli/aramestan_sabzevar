@@ -12,7 +12,7 @@ export interface BaseRequest {
 
 // Auth API Types
 export interface AuthUnknownRequest extends BaseRequest {
-  deviceID: string;
+  // deviceID removed - no longer required
 }
 
 export interface AuthLoginRequest extends BaseRequest {
@@ -53,7 +53,6 @@ export interface BasketItem {
 }
 
 export interface BasketSaveRequest extends BaseRequest {
-  deviceID: string;
   userID: string;
   items: BasketItem[];
 }
@@ -139,7 +138,6 @@ export interface PaymentCompleteRequest extends BaseRequest {
 }
 
 export interface PaymentMethodRequest extends BaseRequest {
-  deviceID: string;
   paymentID: string;
 }
 
@@ -173,7 +171,7 @@ export interface BasketItemWithProduct extends BasketItem {
 export interface AppContextType {
   user: User | null;
   basket: BasketItemWithProduct[];
-  deviceID: string;
+  deviceID: string; // Keeping for backward compatibility but not used in API calls
   login: (mobile: string, otpCode: number) => Promise<void>;
   logout: () => void;
   addToBasket: (productID: string, count: number) => Promise<void>;

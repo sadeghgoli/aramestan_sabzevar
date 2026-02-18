@@ -23,9 +23,6 @@ class ApiClient {
     // Request interceptor to add auth token if available
     this.client.interceptors.request.use(
       (config) => {
-        // Add X-Device-MAC header to all requests
-        config.headers['X-Device-MAC'] = '5C-9A-D8-58-81-95';
-        
         // Add browser-specific headers
         const cacheHeaders = getCacheControlHeaders();
         Object.assign(config.headers, cacheHeaders);

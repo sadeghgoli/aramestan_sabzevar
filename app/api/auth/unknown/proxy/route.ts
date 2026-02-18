@@ -50,31 +50,16 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Get device MAC from header
-    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
-    console.log('Using deviceMAC from header:', deviceMAC);
-
-    // Validate required fields
-    if (!deviceMAC) {
-      return NextResponse.json(
-        { success: false, error: 'deviceMAC is required' },
-        { status: 400 }
-      );
-    }
-
     // Forward request to external API
     const response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/auth/unknown', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'app-version': '1',
-        'X-Device-MAC': deviceMAC,
         'Cache-Control': 'no-cache',
         'Pragma': 'no-cache',
       },
-      body: JSON.stringify({
-        deviceID: deviceMAC
-      })
+      body: JSON.stringify({})
     });
 
     // Check if response is OK
@@ -121,7 +106,7 @@ export async function POST(request: NextRequest) {
     const token = createSimpleToken({
       userId: userID,
       mobile: 'anonymous',
-      deviceID: deviceMAC,
+      deviceID: 'anonymous',
       user: {
         id: userID,
         mobile: 'anonymous',
@@ -138,14 +123,7 @@ export async function POST(request: NextRequest) {
       path: '/'
     });
     
-    // Set deviceMAC cookie
-    unknownResponse.cookies.set('device-mac', deviceMAC, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60, // 24 hours
-      path: '/'
-    });
+    // No deviceMAC cookie needed anymore
     
     // Set user ID cookie
     unknownResponse.cookies.set('user-id', userID, {

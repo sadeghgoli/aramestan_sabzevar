@@ -14,14 +14,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { mobile } = body;
     
-    // Get device MAC from header
-    const deviceMAC = request.headers.get('X-Device-MAC') || '5C-9A-D8-58-81-95';
-    console.log('Using deviceMAC from header:', deviceMAC);
-
     // Validate required fields
-    if (!deviceMAC || !mobile) {
+    if (!mobile) {
       return NextResponse.json(
-        { success: false, error: 'deviceMAC and mobile are required' },
+        { success: false, error: 'mobile is required' },
         { status: 400 }
       );
     }
@@ -32,7 +28,6 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'app-version': '1',
-        'X-Device-MAC': deviceMAC,
       },
       body: JSON.stringify({
         mobile
@@ -76,14 +71,7 @@ export async function POST(request: NextRequest) {
       status: response.status
     });
     
-    // Set deviceMAC cookie
-    loginResponse.cookies.set('device-mac', deviceMAC, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60, // 24 hours
-      path: '/'
-    });
+    // No deviceMAC cookie needed anymore
     
     return loginResponse;
   } catch (error) {
