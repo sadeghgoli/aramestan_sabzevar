@@ -14,14 +14,14 @@ export class BasketService {
    * Save/update basket items
    */
   static async save(request: BasketSaveRequest): Promise<ApiResponse<BasketResponse>> {
-    return apiClient.post<BasketResponse>('/api/basket/save/proxy', request);
+    return apiClient.post<BasketResponse>('/proxy/api/basket/save', request);
   }
 
   /**
    * Read basket items for user
    */
   static async read(request: BasketReadRequest): Promise<ApiResponse<BasketResponse>> {
-    return apiClient.post<BasketResponse>('/api/basket/read/proxy', request);
+    return apiClient.post<BasketResponse>('/proxy/api/basket/read', request);
   }
 }
 

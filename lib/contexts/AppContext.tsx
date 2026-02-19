@@ -252,8 +252,8 @@ export function AppProvider({ children }: AppProviderProps) {
   // Logout function
   const logout = async () => {
     try {
-      // Call logout API to clear cookie
-      await fetch('/api/auth/logout', {
+      // Call upstream logout API via /proxy so upstream clears auth cookie
+      await fetch('/proxy/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
       });
@@ -346,8 +346,8 @@ export function AppProvider({ children }: AppProviderProps) {
     // First check if we have a token in cookies
     const checkAuth = async () => {
       try {
-        // Call a simple API to check if we're authenticated
-        const response = await fetch('/api/auth/check', {
+        // Call upstream auth check via /proxy
+        const response = await fetch('/proxy/api/auth/check', {
           credentials: 'include',
         });
         

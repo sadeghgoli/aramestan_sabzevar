@@ -29,8 +29,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Skip API requests
-  if (event.request.url.includes('/api/')) {
+  // Skip API and proxy requests (do not cache dynamic API responses)
+  if (event.request.url.includes('/api/') || event.request.url.includes('/proxy/')) {
     return;
   }
 

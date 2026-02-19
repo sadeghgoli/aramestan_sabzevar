@@ -35,9 +35,10 @@ export default function OfflineDetector({ children }: OfflineDetectorProps) {
     // Check online status periodically
     const checkOnlineStatus = async () => {
       try {
-        // Try to fetch a small resource to check connectivity
-        const response = await fetch('/api/auth/check', { 
-          method: 'HEAD',
+        // Try to fetch a small resource to check connectivity (use upstream `/proxy/api/auth/check`)
+        const response = await fetch('/proxy/api/auth/check', { 
+          method: 'GET',
+          credentials: 'include',
           cache: 'no-cache',
           signal: AbortSignal.timeout(3000) // 3 second timeout
         });

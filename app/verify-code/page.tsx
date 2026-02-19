@@ -98,8 +98,8 @@ function VerifyCodeContent() {
       setIsLoading(true);
       setError(null);
       
-      // Call login proxy API to send new code
-      const response = await fetch('/api/auth/login/proxy', {
+      // Call upstream login API via Next.js rewrite at /proxy
+      const response = await fetch('/proxy/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
