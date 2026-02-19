@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Forward request to external API
-    const response = await fetch('/proxy/api/payment/check', {
+    const response = await fetch('/api/payment/check', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

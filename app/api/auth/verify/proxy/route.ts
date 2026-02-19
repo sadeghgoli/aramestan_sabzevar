@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       });
       
-      response = await fetch('/proxy/api/auth/verify', {
+      response = await fetch('/api/auth/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

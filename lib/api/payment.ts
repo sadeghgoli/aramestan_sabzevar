@@ -24,7 +24,7 @@ export class PaymentService {
    * Get last payment for user
    */
   static async getLast(request: PaymentLastRequest): Promise<ApiResponse<PaymentResponse>> {
-    return apiClient.post<PaymentResponse>('/api/payment/last', request);
+    return apiClient.post<PaymentResponse>('/api/payment/last/proxy', request);
   }
 
   /**
