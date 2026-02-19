@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Forward request to external API
-    const response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/basket/save', {
+    const response = await fetch('/proxy/api/basket/save', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

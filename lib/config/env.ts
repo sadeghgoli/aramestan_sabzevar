@@ -5,7 +5,7 @@ export const env = {
   // You can override this in `.env.local` with NEXT_PUBLIC_API_BASE_URL.
   API_BASE_URL:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    'http://apikiosk.aramestan.sabzevar.ir',
+    '/proxy',
 
   // App Configuration
   APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '1',

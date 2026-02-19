@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'http://apikiosk.aramestan.sabzevar.ir/api/:path*'
+        source: '/proxy/:path*',
+        destination: 'http://apikiosk.aramestan.sabzevar.ir/:path*'
       }
     ]
   },

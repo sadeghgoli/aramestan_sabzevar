@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     console.log('Request headers:', {
       'Content-Type': 'application/json',
     });
-    console.log('Request URL:', 'http://apikiosk.aramestan.sabzevar.ir/api/auth/verify');
+    console.log('Request URL:', '/proxy/api/auth/verify');
 
     // Validate required fields
     if (!mobile || !otpCode) {
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       });
       
-      response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/auth/verify', {
+      response = await fetch('/proxy/api/auth/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

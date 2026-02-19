@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     // Forward request to external API
-    const response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/products/actives', {
+    const response = await fetch('/proxy/api/products/actives', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

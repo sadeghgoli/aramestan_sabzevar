@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Forward request to external API
-    const response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/payment/method/pos', {
+    const response = await fetch('/proxy/api/payment/method/pos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
