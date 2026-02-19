@@ -55,7 +55,6 @@ export async function POST(request: NextRequest) {
     console.log('Verify request body:', { mobile, otpCode, typeOfOtpCode: typeof otpCode });
     console.log('Request headers:', {
       'Content-Type': 'application/json',
-      'app-version': '1',
     });
     console.log('Request URL:', 'http://apikiosk.aramestan.sabzevar.ir/api/auth/verify');
 
@@ -79,14 +78,12 @@ export async function POST(request: NextRequest) {
       console.log('Request body being sent:', requestBody);
       console.log('Request headers:', {
         'Content-Type': 'application/json',
-        'app-version': '1',
       });
       
       response = await fetch('http://apikiosk.aramestan.sabzevar.ir/api/auth/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'app-version': '1',
         },
         body: requestBody
       });

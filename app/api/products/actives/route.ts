@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'app-version': '1',
       }
     });
 
