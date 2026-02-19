@@ -341,29 +341,10 @@ export function AppProvider({ children }: AppProviderProps) {
     return Math.floor(timeLeft / 1000); // Return in seconds
   };
 
-  // Load user from localStorage on mount
+  // Load user from localStorage on mount (removed upstream auth/check call)
   useEffect(() => {
-    // First check if we have a token in cookies
     const checkAuth = async () => {
-      try {
-        // Call upstream auth check via /proxy
-        const response = await fetch('/proxy/api/auth/check', {
-          credentials: 'include',
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data.authenticated && data.user) {
-            dispatch({ type: 'SET_USER', payload: data.user });
-            loadBasket(data.user.id);
-            return;
-          }
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-      }
-      
-      // Fallback to localStorage if API check fails
+      // Rely on localStorage for client-side session (no upstream auth/check call)
       const storedUser = safeLocalStorageGetItem('user');
       
       if (storedUser) {
