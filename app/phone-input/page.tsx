@@ -135,7 +135,7 @@ export default function PhoneInput() {
 
       // Anonymous login via authService
       const response = await authService.unknown({});
-
+  console.log(response);
       if (!response.success) {
         throw new Error(response.error || 'خطا در ورود ناشناس');
       }

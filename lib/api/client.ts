@@ -22,18 +22,29 @@ class ApiClient {
     // Request interceptor to add auth token if available
     this.client.interceptors.request.use(
       (config) => {
-        // Add browser-specific headers
+        // اضافه کردن لاگ درخواست
+        console.log('🚀 API Request:', {
+          method: config.method?.toUpperCase(),
+          url: config.url,
+          baseURL: config.baseURL,
+          params: config.params,
+          data: config.data,
+          headers: {
+            ...config.headers,
+            // محو کردن اطلاعات حساس
+            Authorization: config.headers.Authorization ? '***' : undefined,
+          },
+          timestamp: new Date().toISOString()
+        });
+
+        // کدهای قبلی
         const cacheHeaders = getCacheControlHeaders();
         Object.assign(config.headers, cacheHeaders);
         
-        // You can add auth token here if needed
-        // const token = localStorage.getItem('authToken');
-        // if (token) {
-        //   config.headers.Authorization = `Bearer ${token}`;
-        // }
         return config;
       },
       (error) => {
+        console.error('❌ Request Error:', error);
         return Promise.reject(error);
       }
     );
@@ -41,18 +52,35 @@ class ApiClient {
     // Response interceptor to handle common errors
     this.client.interceptors.response.use(
       (response: AxiosResponse) => {
+        console.log('✅ API Response:', {
+          method: response.config.method?.toUpperCase(),
+          url: response.config.url,
+          status: response.status,
+          statusText: response.statusText,
+          data: response.data,
+          headers: response.headers,
+          timestamp: new Date().toISOString()
+        });
+        
         return response;
       },
       (error) => {
-        // Handle common errors
+        console.log('❌ API Error:', {
+          method: error.config?.method?.toUpperCase(),
+          url: error.config?.url,
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          message: error.message,
+          timestamp: new Date().toISOString()
+        });
+
+        // کدهای قبلی خطا
         if (error.response?.status === 401) {
-          // Handle unauthorized
           console.error('Unauthorized access');
         } else if (error.response?.status === 500) {
-          // Handle server errors
           console.error('Server error');
         } else if (!error.response) {
-          // Network error
           console.error('Network error');
         }
 
